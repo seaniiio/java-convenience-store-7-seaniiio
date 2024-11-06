@@ -27,6 +27,17 @@ public class StoreController {
         outputView.printWelcomeMessage();
         outputView.printProductsInformation(storeService.getProductsInformation());
 
-        storeService.setPurchase(inputView.getProductAndQuantity());
+        continueUntilNormalInput(() -> storeService.setPurchase(inputView.getProductAndQuantity()));
+    }
+
+    private void continueUntilNormalInput(Runnable processSpecificInput) {
+        while (true) {
+            try {
+                processSpecificInput.run();
+                break;
+            } catch (IllegalArgumentException e) {
+                outputView.printMessage(e.getMessage());
+            }
+        }
     }
 }
