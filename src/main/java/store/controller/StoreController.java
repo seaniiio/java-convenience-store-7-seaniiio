@@ -26,5 +26,7 @@ public class StoreController {
 
         outputView.printWelcomeMessage();
         outputView.printProductsInformation(storeService.getProductsInformation());
+
+        storeService.setPurchase(inputView.getProductAndQuantity());
     }
 }

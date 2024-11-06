@@ -27,6 +27,10 @@ public class Product {
                 productInformations.get(3));
     }
 
+    public boolean equalsTo(String name) {
+        return this.name.equals(name);
+    }
+
     public String getProductInformation() {
         if (promotion.equals("null")) {
             if (stock == 0) {
