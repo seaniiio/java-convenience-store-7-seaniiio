@@ -22,4 +22,22 @@ class ProductTest {
         Assertions.assertThat(Product.createProduct(product).getProductInformation())
                 .isEqualTo(expectedProductInformation);
     }
+
+    @Test
+    public void 재고_없는_일반_상품_생성_테스트() {
+        String product = "콜라,1000,0,null";
+        String expectedProductInformation = "- 콜라 1,000원 재고 없음";
+
+        Assertions.assertThat(Product.createProduct(product).getProductInformation())
+                .isEqualTo(expectedProductInformation);
+    }
+
+    @Test
+    public void 재고_없는_프로모션_상품_생성_테스트() {
+        String product = "탄산수,1200,0,탄산2+1";
+        String expectedProductInformation = "- 탄산수 1,200원 재고 없음 탄산2+1";
+
+        Assertions.assertThat(Product.createProduct(product).getProductInformation())
+                .isEqualTo(expectedProductInformation);
+    }
 }
