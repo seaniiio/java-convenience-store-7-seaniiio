@@ -36,6 +36,6 @@ public class Reader {
             e.printStackTrace();
         }
 
-        return contents.subList(1, -1);
+        return contents.subList(1, contents.size());
     }
 }

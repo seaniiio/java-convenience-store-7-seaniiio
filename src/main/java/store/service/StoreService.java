@@ -12,7 +12,11 @@ public class StoreService {
     }
 
     public void set(List<String> givenProducts, List<String> givenPromotions) {
-        Products products = Products.createProducts(givenProducts);
+        this.products = Products.createProducts(givenProducts);
         Promotions promotions = Promotions.createPromotions(givenPromotions);
+    }
+
+    public List<String> getProductsInformation() {
+        return products.getInformations();
     }
 }
