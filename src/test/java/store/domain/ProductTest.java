@@ -40,4 +40,12 @@ class ProductTest {
         Assertions.assertThat(Product.createProduct(product).getProductInformation())
                 .isEqualTo(expectedProductInformation);
     }
+
+    @Test
+    public void 재고_확인_테스트() {
+        Product product = Product.createProduct("탄산수,1200,5,탄산2+1");
+
+        Assertions.assertThat(product.canPurchase(7))
+                .isEqualTo(false);
+    }
 }

@@ -20,7 +20,7 @@ public class StoreService {
 
     public void set(List<String> givenProducts, List<String> givenPromotions) {
         this.products = Products.createProducts(givenProducts);
-        Promotions promotions = Promotions.createPromotions(givenPromotions);
+        this.promotions = Promotions.createPromotions(givenPromotions);
     }
 
     public List<String> getProductsInformation() {
@@ -30,6 +30,6 @@ public class StoreService {
     public void setPurchase(String productAndQuantity) {
         Map<String, Integer> purchasesInput = inputFormatter.formatPurchaseInput(productAndQuantity);
         this.purchases = Purchases.createPurchases(purchasesInput);
-        System.out.println("purchases = " + purchases);
+        this.purchases.supplyPurchases();
     }
 }

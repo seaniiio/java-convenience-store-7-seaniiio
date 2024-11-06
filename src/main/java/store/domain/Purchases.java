@@ -21,4 +21,8 @@ public class Purchases {
 
         return new Purchases(purchases);
     }
+
+    public void supplyPurchases() {
+        this.purchases.forEach(Purchase::supplyPurchase);
+    }
 }

@@ -31,6 +31,14 @@ public class Product {
         return this.name.equals(name);
     }
 
+    public boolean canPurchase(int quantity) {
+        return stock >= quantity;
+    }
+
+    public void reduceStock(int quantity) {
+        this.stock -= quantity;
+    }
+
     public String getProductInformation() {
         if (promotion.equals("null")) {
             if (stock == 0) {
