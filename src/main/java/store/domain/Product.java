@@ -29,7 +29,13 @@ public class Product {
 
     public String getProductInformation() {
         if (promotion.equals("null")) {
+            if (stock == 0) {
+                return String.format("- %s %,d원 재고 없음", this.name, this.price);
+            }
             return String.format("- %s %,d원 %,d개", this.name, this.price, this.stock);
+        }
+        if (stock == 0) {
+            return String.format("- %s %,d원 재고 없음 %s", this.name, this.price, this.promotion);
         }
         return String.format("- %s %,d원 %,d개 %s", this.name, this.price, this.stock, this.promotion);
     }
