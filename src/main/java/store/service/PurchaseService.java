@@ -1,6 +1,5 @@
 package store.service;
 
-import java.util.List;
 import java.util.Map;
 import store.domain.Purchases;
 import store.util.InputFormatter;
