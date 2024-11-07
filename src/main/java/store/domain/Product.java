@@ -8,14 +8,19 @@ public class Product {
 
     private final String name;
     private final int price;
-    private int stock;
-    private final String promotion;
+    private NormalStock normalStock;
+    private PromotionStock promotionStock;
 
     public Product(String name, int price, int stock, String promotion) {
         this.name = name;
         this.price = price;
-        this.stock = stock;
-        this.promotion = promotion;
+
+        if (promotion.equals("null")) {
+            this.normalStock = new NormalStock(stock);
+            return;
+        }
+
+        this.promotionStock = new PromotionStock(promotion, stock);
     }
 
     public static Product createProduct(String productInformation) {
@@ -31,24 +36,31 @@ public class Product {
         return this.name.equals(name);
     }
 
-    public boolean canPurchase(int quantity) {
-        return stock >= quantity;
-    }
-
-    public void reduceStock(int quantity) {
-        this.stock -= quantity;
-    }
-
     public String getProductInformation() {
+        String information = "";
+        if (normalStock != null) {
+            information += String.format("- %s %,d원 ") + normalStock.getInformation();
+            information += "\n";
+        }
+        if (promotionStock != null) {
+            information += String.format("- %s %,d원 ") + promotionStock.getInformation();
+            information += "\n";
+        }
+        return information;
+    }
+
+    public void addNewStock(String productInformation) { // 새로운 프로모션 / 일반 재고 추가
+        List<String> productInformations = new ArrayList<>(Arrays.stream(productInformation.split(",")).toList());
+        // validate 필요
+        int stock = Integer.parseInt(productInformations.get(2));
+        String promotion = productInformations.get(3);
+
         if (promotion.equals("null")) {
-            if (stock == 0) {
-                return String.format("- %s %,d원 재고 없음", this.name, this.price);
-            }
-            return String.format("- %s %,d원 %,d개", this.name, this.price, this.stock);
+            //일반 상품 추가
+            this.normalStock = new NormalStock(stock);
+            return;
         }
-        if (stock == 0) {
-            return String.format("- %s %,d원 재고 없음 %s", this.name, this.price, this.promotion);
-        }
-        return String.format("- %s %,d원 %,d개 %s", this.name, this.price, this.stock, this.promotion);
+        //프로모션 상품 추가
+        this.promotionStock = new PromotionStock(promotion, stock);
     }
 }

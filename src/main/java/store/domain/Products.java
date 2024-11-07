@@ -11,16 +11,6 @@ public class Products {
         this.products = products;
     }
 
-    public static Products createProducts(List<String> givenProducts) {
-        List<Product> products = new ArrayList<>();
-
-        givenProducts.stream()
-                .map(Product::createProduct)
-                .forEach(products::add);
-
-        return new Products(products);
-    }
-
     public static Product getProduct(String productName) {
         for (Product product : products) {
             if (product.equalsTo(productName)) {
@@ -30,9 +20,29 @@ public class Products {
         return null;
     }
 
-    public static boolean isExist(String productName) {
-        return products.stream()
-                .anyMatch(product -> product.equalsTo(productName));
+    public static Products createProducts(List<String> givenProducts) {
+        List<Product> products = new ArrayList<>();
+
+        for (String givenProduct : givenProducts) {
+            //이미 products에 존재하는 경우
+            String[] productInformation = givenProduct.split(",");
+            if (getProduct(productInformation[0]) != null) {
+                addNewStockToProducts(givenProduct);
+                continue;
+            }
+
+            Product product = Product.createProduct(givenProduct);
+            products.add(product);
+        }
+
+        return new Products(products);
+    }
+
+    public static void addNewStockToProducts(String givenProduct) {
+        String[] productInformation = givenProduct.split(",");
+        Product product = getProduct(productInformation[0]);
+        product.addNewStock(givenProduct);
+
     }
 
     public List<String> getInformations() {

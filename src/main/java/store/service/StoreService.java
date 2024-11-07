@@ -11,7 +11,6 @@ public class StoreService {
 
     private final InputFormatter inputFormatter;
     private Products products;
-    private Promotions promotions;
     private Purchases purchases;
 
     public StoreService() {
@@ -20,7 +19,7 @@ public class StoreService {
 
     public void set(List<String> givenProducts, List<String> givenPromotions) {
         this.products = Products.createProducts(givenProducts);
-        this.promotions = Promotions.createPromotions(givenPromotions);
+        Promotions.createPromotions(givenPromotions);
     }
 
     public List<String> getProductsInformation() {
