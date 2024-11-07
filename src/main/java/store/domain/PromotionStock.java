@@ -18,8 +18,20 @@ public class PromotionStock {
 
     public String getInformation() {
         if (stock == 0) {
-            return String.format("재고 없음 %s", this.promotion);
+            return String.format("재고 없음 %s\n", this.promotion);
         }
-        return String.format("%,d개 %s",this.stock, this.promotion);
+        return String.format("%,d개 %s\n",this.stock, this.promotion.getName());
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public boolean isOverBuyQuantity(int quantity) {
+        return promotion.isisOverBuyQuantity(quantity);
+    }
+
+    public int getPromotionBuyQuantity() {
+        return promotion.getBuyQuantity();
     }
 }

@@ -5,24 +5,9 @@ import java.util.List;
 
 public class Products {
 
-    private static List<Product> products;
+    private static List<Product> products = new ArrayList<>();
 
-    private Products(List<Product> products) {
-        this.products = products;
-    }
-
-    public static Product getProduct(String productName) {
-        for (Product product : products) {
-            if (product.equalsTo(productName)) {
-                return product;
-            }
-        }
-        return null;
-    }
-
-    public static Products createProducts(List<String> givenProducts) {
-        List<Product> products = new ArrayList<>();
-
+    public static void createProducts(List<String> givenProducts) {
         for (String givenProduct : givenProducts) {
             //이미 products에 존재하는 경우
             String[] productInformation = givenProduct.split(",");
@@ -34,8 +19,15 @@ public class Products {
             Product product = Product.createProduct(givenProduct);
             products.add(product);
         }
+    }
 
-        return new Products(products);
+    public static Product getProduct(String productName) {
+        for (Product product : products) {
+            if (product.equalsTo(productName)) {
+                return product;
+            }
+        }
+        return null;
     }
 
     public static void addNewStockToProducts(String givenProduct) {

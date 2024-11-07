@@ -10,8 +10,12 @@ public class NormalStock {
 
     public String getInformation() {
         if (stock == 0) {
-            return "재고 없음";
+            return "재고 없음\n";
         }
-        return String.format("%,d개", this.stock);
+        return String.format("%,d개\n", this.stock);
+    }
+
+    public int getStock() {
+        return stock;
     }
 }

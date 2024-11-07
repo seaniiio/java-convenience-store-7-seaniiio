@@ -38,13 +38,11 @@ public class Product {
 
     public String getProductInformation() {
         String information = "";
-        if (normalStock != null) {
-            information += String.format("- %s %,d원 ") + normalStock.getInformation();
-            information += "\n";
-        }
         if (promotionStock != null) {
-            information += String.format("- %s %,d원 ") + promotionStock.getInformation();
-            information += "\n";
+            information += String.format("- %s %,d원 ", this.name, this.price) + promotionStock.getInformation();
+        }
+        if (normalStock != null) {
+            information += String.format("- %s %,d원 ", this.name, this.price) + normalStock.getInformation();
         }
         return information;
     }
@@ -62,5 +60,37 @@ public class Product {
         }
         //프로모션 상품 추가
         this.promotionStock = new PromotionStock(promotion, stock);
+    }
+
+    private boolean isPromotionApply() {
+        return promotionStock != null && promotionStock.isPromotionApply();
+    }
+
+    public boolean isOverPromotionBuyQuantity(int quantity) {
+        if (isPromotionApply() && !promotionStock.isOverBuyQuantity(quantity)) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean canBuy(int quantity) {
+        //프로모션이 적용되는 경우
+        if (isPromotionApply()) {
+            return quantity <= normalStock.getStock() + promotionStock.getStock();
+        }
+        //프로모션이 적용되지 않는 경우
+        return quantity <= normalStock.getStock();
+    }
+
+    public void purchase(int quantity) {
+
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getPromotionBuyQuantity() {
+        return promotionStock.getPromotionBuyQuantity();
     }
 }
