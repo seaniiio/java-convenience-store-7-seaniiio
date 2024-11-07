@@ -30,4 +30,11 @@ public class Promotion {
                 LocalDate.parse(promotionInformations.get(3), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                 LocalDate.parse(promotionInformations.get(4), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     }
+
+    public Promotion of(String name) {
+        if (this.name.equals(name)) {
+            return this;
+        }
+        return null;
+    }
 }

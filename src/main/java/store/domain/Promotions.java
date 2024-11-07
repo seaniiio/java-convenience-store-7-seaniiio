@@ -5,19 +5,25 @@ import java.util.List;
 
 public class Promotions {
 
-    private final List<Promotion> promotions;
+    private static List<Promotion> promotions;
 
-    private Promotions(List<Promotion> promotions) {
-        this.promotions = promotions;
+    public Promotions() {
     }
 
-    public static Promotions createPromotions(List<String> givenPromotions) {
-        List<Promotion> promotions = new ArrayList<>();
+    public static void createPromotions(List<String> givenPromotions) {
+        promotions = new ArrayList<>();
 
         givenPromotions.stream()
                 .map(Promotion::createPromotion)
                 .forEach(promotions::add);
+    }
 
-        return new Promotions(promotions);
+    public Promotion getPromotion(String name) {
+        for (Promotion promotion : promotions) {
+            if (promotion.of(name) != null) {
+                return promotion.of(name);
+            }
+        }
+        return null;
     }
 }
