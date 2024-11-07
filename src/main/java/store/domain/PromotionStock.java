@@ -12,6 +12,10 @@ public class PromotionStock {
         this.promotion = promotions.getPromotion(promotionName);
     }
 
+    public boolean isPromotionApply() {
+        return promotion.isApply();
+    }
+
     public String getInformation() {
         if (stock == 0) {
             return String.format("재고 없음 %s", this.promotion);

@@ -1,5 +1,6 @@
 package store.domain;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -36,5 +37,10 @@ public class Promotion {
             return this;
         }
         return null;
+    }
+
+    public boolean isApply() {
+        LocalDate now = DateTimes.now().toLocalDate();
+        return !(now.isBefore(startDate) || now.isAfter(endDate));
     }
 }
