@@ -83,7 +83,7 @@ public class Product {
     }
 
     private boolean isPromotionApply() {
-        return promotionStock != -1 && promotion.isApply();
+        return promotion != null && promotion.isApply();
     }
 
     public boolean isOverPromotionBuyQuantity(int quantity) {
@@ -104,6 +104,9 @@ public class Product {
 
     // 프로모션 적용되지 않는 물품 개수 return
     public int notApplyPromotionCounts(int quantity) {
+        if (promotion == null) {
+            return 0;
+        }
         int maxGift = promotionStock / promotion.getBuyAndGetQuantity();
 
         if (quantity / promotion.getBuyAndGetQuantity() <= maxGift) {
@@ -137,6 +140,9 @@ public class Product {
     }
 
     public int getPromotionBuyQuantity() {
+        if (promotion == null) {
+            return 0;
+        }
         return promotion.getBuyQuantity();
     }
 
