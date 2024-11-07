@@ -20,11 +20,23 @@ public class PurchaseService {
         Purchases.createPurchases(purchasesInput);
     }
 
+    public void supplyPurchases() {
+        purchases.supplyPurchases();
+    }
+
     public Map<String, Boolean> getPurchasePromotionStatus() {
         return purchases.getPurchasePromotionStatus();
     }
 
     public void setPurchasePromotionStatus(Map<String, Boolean> status) {
         purchases.setPurchasePromotionStatus(status);
+    }
+
+    public Map<String, Integer> getPromotionStockStatus() {
+        return purchases.getPromotionStockStatus();
+    }
+
+    public void setPurchaseConfirmation(Map<String, Boolean> status) {
+        purchases.setPurchaseConfirmation(status);
     }
 }

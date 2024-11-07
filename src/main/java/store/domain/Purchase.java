@@ -4,30 +4,20 @@ public class Purchase {
 
     private final Product product;
     private int quantity;
+    private int giftAmount;
+    private boolean confirmation;
 
     private Purchase(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
-    }
-
-    public static Purchase createPurchase(String productName, int quantity) {
-        validateProduct(productName, quantity);
-        return new Purchase(Products.getProduct(productName), quantity);
-    }
-
-    private static void validateProduct(String productName, int quantity) {
-        if (Products.getProduct(productName) == null) {
-            throw new IllegalArgumentException("[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.");
-        }
-
-        Product product = Products.getProduct(productName);
-        if (!product.canBuy(quantity)) {
-            throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
-        }
+        this.giftAmount = 0;
+        this.confirmation = true;
     }
 
     public void supplyPurchase() {
-        this.product.purchase(this.quantity);
+        if (confirmation) {
+            this.giftAmount = this.product.purchase(this.quantity);
+        }
     }
 
     public String getProductName() {
@@ -48,15 +38,47 @@ public class Purchase {
         this.quantity = product.getPromotionBuyQuantity();
     }
 
-    private int getTotalAmount() {
-        return this.product.getAmount(this.quantity);
-    }
-
     public String purchaseContent() {
-        return String.format("%-15s%-9d%-,6d", this.product.getName(), this.quantity, getTotalAmount());
+        if (confirmation) {
+            return String.format("%-15s%-9d%-,6d", this.product.getName(), this.quantity, getTotalAmount());
+        }
+        return null;
     }
 
     public boolean canGetGift() {
-        return product.getPromotionBuyQuantity() <= quantity;
+        return confirmation && product.getPromotionBuyQuantity() <= quantity;
+    }
+
+    public Integer getGiftAmount() {
+        return this.giftAmount;
+    }
+
+    public int getNotApplyPromotionCounts() {
+        // 프로모션이 적용되지 않는 물품 수 return
+        return product.notApplyPromotionCounts(quantity);
+    }
+
+    public void cancel() {
+        this.confirmation = false;
+    }
+
+    public static Purchase createPurchase(String productName, int quantity) {
+        validateProduct(productName, quantity);
+        return new Purchase(Products.getProduct(productName), quantity);
+    }
+
+    private static void validateProduct(String productName, int quantity) {
+        if (Products.getProduct(productName) == null) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.");
+        }
+
+        Product product = Products.getProduct(productName);
+        if (!product.canBuy(quantity)) {
+            throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+        }
+    }
+
+    private int getTotalAmount() {
+        return this.product.getAmount(this.quantity);
     }
 }

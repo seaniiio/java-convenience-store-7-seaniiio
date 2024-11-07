@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Receipt {
 
-    public static List<String> getPruchasesContent() {
+    public static List<String> getPurchasesContent() {
         return Purchases.purchasesContent();
     }
 

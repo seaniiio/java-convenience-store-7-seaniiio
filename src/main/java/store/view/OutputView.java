@@ -27,7 +27,7 @@ public class OutputView {
         System.out.println("===========W 편의점=============");
         System.out.println("상품명           수량      금액");
 
-        List<String> pruchasesContent = Receipt.getPruchasesContent();
+        List<String> pruchasesContent = Receipt.getPurchasesContent();
         for (String purchase : pruchasesContent) {
             System.out.println(purchase);
         }

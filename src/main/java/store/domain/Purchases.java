@@ -20,7 +20,7 @@ public class Purchases {
         Map<String, Integer> gifts = new HashMap<>();
         for (Purchase purchase : purchases) {
             if (purchase.canGetGift()) {
-                gifts.put(purchase.getProductName(), 1);
+                gifts.put(purchase.getProductName(), purchase.getGiftAmount());
             }
         }
         return gifts;
@@ -48,6 +48,26 @@ public class Purchases {
             if (status.get(productName)) {
                 Purchase purchase = from(productName);
                 purchase.addQuantityForPromotion();
+            }
+        }
+    }
+
+    public Map<String, Integer> getPromotionStockStatus() {
+        Map<String, Integer> status = new HashMap<>();
+        for (Purchase purchase : purchases) {
+            int notApplyPromotionCounts = purchase.getNotApplyPromotionCounts();
+            if (notApplyPromotionCounts != 0) {
+                status.put(purchase.getProductName(), notApplyPromotionCounts);
+            }
+        }
+        return status;
+    }
+
+    public void setPurchaseConfirmation(Map<String, Boolean> confirm) {
+        for (String productName : confirm.keySet()) {
+            if (!confirm.get(productName)) {
+                //구매 취소
+                from(productName).cancel();
             }
         }
     }

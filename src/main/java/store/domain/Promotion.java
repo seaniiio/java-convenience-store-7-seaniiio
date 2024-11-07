@@ -44,16 +44,16 @@ public class Promotion {
         return !(now.isBefore(startDate) || now.isAfter(endDate));
     }
 
-    public void apply() {
-
-    }
-
-    public boolean isisOverBuyQuantity(int quantity) {
+    public boolean isOverBuyQuantity(int quantity) {
         return quantity >= buyQuantity;
     }
 
     public int getBuyQuantity() {
         return buyQuantity;
+    }
+
+    public int getBuyAndGetQuantity() {
+        return this.buyQuantity + this.getQuantity;
     }
 
     public String getName() {

@@ -1,5 +1,6 @@
 package store.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import store.service.PurchaseService;
@@ -40,10 +41,18 @@ public class StoreController {
                 purchasePromotionStatus.replace(productName, true);
             }
         }
-        purchaseService.setPurchasePromotionStatus(purchasePromotionStatus);
 
-        //
+        Map<String, Integer> promotionStockStatus = purchaseService.getPromotionStockStatus(); // 현재 콜라 4개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)
+        Map<String, Boolean> purchaseConfirm = new HashMap<>();
+        for (String productName : promotionStockStatus.keySet()) {
+            String addInput = inputView.inputPurchaseConfirm(productName, promotionStockStatus.get(productName));
+            if (addInput.equals("N")) {
+                purchaseConfirm.put(productName, false);
+            }
+        }
+        purchaseService.setPurchaseConfirmation(purchaseConfirm);
 
+        purchaseService.supplyPurchases();
         outputView.printReceipt();
     }
 
