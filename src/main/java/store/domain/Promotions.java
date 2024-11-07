@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Promotions {
 
-    private static List<Promotion> promotions;
+    private static List<Promotion> promotions = new ArrayList<>();
 
     public static void createPromotions(List<String> givenPromotions) {
         promotions = new ArrayList<>();

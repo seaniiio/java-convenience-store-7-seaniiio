@@ -93,4 +93,8 @@ public class Product {
     public int getPromotionBuyQuantity() {
         return promotionStock.getPromotionBuyQuantity();
     }
+
+    public int getAmount(int quantity) {
+        return quantity * price;
+    }
 }

@@ -1,28 +1,72 @@
 package store.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Purchases {
 
-    private List<Purchase> purchases;
+    private static List<Purchase> purchases;
 
-    private Purchases(List<Purchase> purchases) {
-        this.purchases = purchases;
-    }
-
-    public static Purchases createPurchases(Map<String, Integer> rawPurchases) {
-        List<Purchase> purchases = new ArrayList<>();
-
+    public static void createPurchases(Map<String, Integer> rawPurchases) {
+        purchases = new ArrayList<>();
         for (String productName : rawPurchases.keySet()) {
             purchases.add(Purchase.createPurchase(productName, rawPurchases.get(productName)));
         }
+    }
 
-        return new Purchases(purchases);
+    public static Map<String, Integer> getGiftsContent() {
+        Map<String, Integer> gifts = new HashMap<>();
+        for (Purchase purchase : purchases) {
+            if (purchase.canGetGift()) {
+                gifts.put(purchase.getProductName(), 1);
+            }
+        }
+        return gifts;
     }
 
     public void supplyPurchases() {
         this.purchases.forEach(Purchase::supplyPurchase);
+    }
+
+    public Map<String, Boolean> getPurchasePromotionStatus() {
+        Map<String, Boolean> status = new HashMap<>();
+        for (Purchase purchase : purchases) {
+            // 프로모션이 적용되는데, 프로모션의 조건보다 적게 구입할 경우만 put
+            if (purchase.getPromotionState()) {
+                status.put(purchase.getProductName(), false);
+            }
+        }
+
+        return status;
+    }
+
+    public void setPurchasePromotionStatus(Map<String, Boolean> status) {
+        // true인 값들에 대해 구매 quantity 추가
+        for (String productName : status.keySet()) {
+            if (status.get(productName)) {
+                Purchase purchase = from(productName);
+                purchase.addQuantityForPromotion();
+            }
+        }
+    }
+
+    public static List<String> purchasesContent() {
+        List<String> content = new ArrayList<>();
+        purchases.stream()
+                .map(Purchase::purchaseContent)
+                .forEach(content::add);
+
+        return content;
+    }
+
+    private Purchase from(String productName) {
+        for (Purchase purchase : purchases) {
+            if (purchase.equalName(productName)) {
+                return purchase;
+            }
+        }
+        return null;
     }
 }

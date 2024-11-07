@@ -41,6 +41,10 @@ public class StoreController {
             }
         }
         purchaseService.setPurchasePromotionStatus(purchasePromotionStatus);
+
+        //
+
+        outputView.printReceipt();
     }
 
     private void continueUntilNormalInput(Runnable processSpecificInput) {

@@ -43,4 +43,20 @@ public class Promotion {
         LocalDate now = DateTimes.now().toLocalDate();
         return !(now.isBefore(startDate) || now.isAfter(endDate));
     }
+
+    public void apply() {
+
+    }
+
+    public boolean isisOverBuyQuantity(int quantity) {
+        return quantity >= buyQuantity;
+    }
+
+    public int getBuyQuantity() {
+        return buyQuantity;
+    }
+
+    public String getName() {
+        return this.name;
+    }
 }
