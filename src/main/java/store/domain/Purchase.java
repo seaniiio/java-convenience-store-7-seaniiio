@@ -7,7 +7,6 @@ public class Purchase {
     private int giftNumber;
     private int amount;
     private int giftAmount;
-
     private boolean confirmation;
 
     private Purchase(Product product, int quantity) {
@@ -27,12 +26,18 @@ public class Purchase {
         }
     }
 
-    public int getAmount() {
-        return this.amount;
+    public int getPurchasedAmount() {
+        if (confirmation) {
+            return this.amount;
+        }
+        return 0;
     }
 
-    public int getGiftAmount() {
-        return this.giftAmount;
+    public int getPurchasedGiftAmount() {
+        if (confirmation) {
+            return this.giftAmount;
+        }
+        return 0;
     }
 
     public String getProductName() {
@@ -95,5 +100,12 @@ public class Purchase {
 
     private int getTotalAmount() {
         return this.product.getAmount(this.quantity);
+    }
+
+    public int getPurchasedQuantity() {
+        if (confirmation) {
+            return this.quantity;
+        }
+        return 0;
     }
 }

@@ -12,4 +12,8 @@ public class Receipt {
     public static Map<String, Integer> getGifts() {
         return Purchases.getGiftsContent();
     }
+
+    public static List<String> getAmounts() {
+        return Purchases.getAmounts();
+    }
 }

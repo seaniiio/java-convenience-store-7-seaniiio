@@ -39,5 +39,9 @@ public class OutputView {
         }
 
         System.out.println("==============================");
+        List<String> amounts = Receipt.getAmounts();
+        for (String amount : amounts) {
+            System.out.println(amount);
+        }
     }
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 public class Purchases {
 
     private static List<Purchase> purchases;
+    private static int totalQuantity = 0;
     private static int totalAmount = 0;
     private static boolean membershipConfirmation = false;
     private static int membershipSaleAmount = 0;
@@ -32,6 +33,12 @@ public class Purchases {
 
     public static List<String> getAmounts() {
         calculateAmounts();
+        List<String> resultMessage = new ArrayList<>();
+        resultMessage.add(String.format("%-14s%-8d%,6d", "총구매액", totalQuantity, totalAmount));
+        resultMessage.add(String.format("%-21s-%,-6d", "행사할인", promotionSaleAmount));
+        resultMessage.add(String.format("%-21s-%,-6d", "멤버십할인", membershipSaleAmount));
+        resultMessage.add(String.format("%-21s%,-6d", "내실돈", totalAmount));
+        return resultMessage;
     }
 
     public void supplyPurchases() {
@@ -94,12 +101,12 @@ public class Purchases {
     }
 
     private static void calculateAmounts() {
-        totalAmount = purchases.stream()
-                .mapToInt(Purchase::getAmount)
+        totalQuantity = purchases.stream()
+                .mapToInt(Purchase::getPurchasedQuantity)
                 .sum();
 
         promotionSaleAmount = purchases.stream()
-                .mapToInt(Purchase::getGiftAmount)
+                .mapToInt(Purchase::getPurchasedGiftAmount)
                 .sum();
 
         if (membershipConfirmation) {
@@ -108,6 +115,11 @@ public class Purchases {
                 membershipSaleAmount = 8000;
             }
         }
+
+        totalAmount = purchases.stream()
+                .mapToInt(Purchase::getPurchasedAmount)
+                .sum();
+        totalAmount -= (promotionSaleAmount + membershipSaleAmount);
     }
 
     private Purchase from(String productName) {
