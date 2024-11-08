@@ -135,13 +135,6 @@ public class Product {
         return this.name;
     }
 
-    public int getPromotionBuyQuantity() {
-        if (promotion == null) {
-            return 0;
-        }
-        return promotion.getBuyQuantity();
-    }
-
     public int getAmount(int quantity) {
         return quantity * price;
     }
