@@ -3,6 +3,7 @@ package store.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import store.service.PurchaseService;
 import store.service.StoreService;
 import store.util.InputFormatter;
@@ -38,7 +39,7 @@ public class StoreController {
 
             outputView.printReceipt(purchaseService.getPurchasesContent(), purchaseService.getGiftsContent());
 
-            if (processContinueInput()) {
+            if (continueUntilNormalInput(this::processContinueInput)) {
                 continue;
             }
             break;
@@ -105,6 +106,16 @@ public class StoreController {
             try {
                 processSpecificInput.run();
                 break;
+            } catch (IllegalArgumentException e) {
+                outputView.printMessage(e.getMessage());
+            }
+        }
+    }
+
+    private <T> T continueUntilNormalInput(Supplier<T> processSpecificInput) {
+        while (true) {
+            try {
+                return processSpecificInput.get();
             } catch (IllegalArgumentException e) {
                 outputView.printMessage(e.getMessage());
             }
