@@ -52,11 +52,11 @@ public class StoreController {
             }
         }
         purchaseService.setPurchaseConfirmation(purchaseConfirm);
-
         purchaseService.applyMembershipSale(inputView.inputMembershipSale());
 
         purchaseService.supplyPurchases();
-        outputView.printReceipt();
+
+        outputView.printReceipt(purchaseService.getPurchasesContent(), purchaseService.getGiftsContent(), purchaseService.getAmountsContent());
     }
 
     private void continueUntilNormalInput(Runnable processSpecificInput) {

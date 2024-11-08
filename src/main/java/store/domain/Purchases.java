@@ -7,38 +7,18 @@ import java.util.Map;
 
 public class Purchases {
 
-    private static List<Purchase> purchases;
-    private static int totalQuantity = 0;
-    private static int totalAmount = 0;
-    private static boolean membershipConfirmation = false;
-    private static int membershipSaleAmount = 0;
-    private static int promotionSaleAmount = 0;
+    private List<Purchase> purchases;
+    private int totalQuantity = 0;
+    private int totalAmount = 0;
+    private boolean membershipConfirmation = false;
+    private int membershipSaleAmount = 0;
+    private int promotionSaleAmount = 0;
 
-    public static void createPurchases(Map<String, Integer> rawPurchases) {
+    public void setPurchases(Map<String, Integer> rawPurchases) {
         purchases = new ArrayList<>();
         for (String productName : rawPurchases.keySet()) {
             purchases.add(Purchase.createPurchase(productName, rawPurchases.get(productName)));
         }
-    }
-
-    public static Map<String, Integer> getGiftsContent() {
-        Map<String, Integer> gifts = new HashMap<>();
-        for (Purchase purchase : purchases) {
-            if (purchase.canGetGift()) {
-                gifts.put(purchase.getProductName(), purchase.getGiftNumber());
-            }
-        }
-        return gifts;
-    }
-
-    public static List<String> getAmounts() {
-        calculateAmounts();
-        List<String> resultMessage = new ArrayList<>();
-        resultMessage.add(String.format("%-14s%-8d%,6d", "총구매액", totalQuantity, totalAmount));
-        resultMessage.add(String.format("%-21s-%,-6d", "행사할인", promotionSaleAmount));
-        resultMessage.add(String.format("%-21s-%,-6d", "멤버십할인", membershipSaleAmount));
-        resultMessage.add(String.format("%-21s%,-6d", "내실돈", totalAmount));
-        return resultMessage;
     }
 
     public void supplyPurchases() {
@@ -87,7 +67,7 @@ public class Purchases {
         }
     }
 
-    public static List<String> purchasesContent() {
+    public List<String> purchasesContent() {
         List<String> content = new ArrayList<>();
         purchases.stream()
                 .map(Purchase::purchaseContent)
@@ -96,11 +76,31 @@ public class Purchases {
         return content;
     }
 
+    public Map<String, Integer> getGiftsContent() {
+        Map<String, Integer> gifts = new HashMap<>();
+        for (Purchase purchase : purchases) {
+            if (purchase.canGetGift()) {
+                gifts.put(purchase.getProductName(), purchase.getGiftNumber());
+            }
+        }
+        return gifts;
+    }
+
+    public List<String> getAmountsContent() {
+        calculateAmounts();
+        List<String> resultMessage = new ArrayList<>();
+        resultMessage.add(String.format("%-14s%-8d%,6d", "총구매액", totalQuantity, totalAmount));
+        resultMessage.add(String.format("%-21s-%,-6d", "행사할인", promotionSaleAmount));
+        resultMessage.add(String.format("%-21s-%,-6d", "멤버십할인", membershipSaleAmount));
+        resultMessage.add(String.format("%-21s%,-6d", "내실돈", totalAmount));
+        return resultMessage;
+    }
+
     public void applyMembershipSale() {
         this.membershipConfirmation = true;
     }
 
-    private static void calculateAmounts() {
+    private void calculateAmounts() {
         totalQuantity = purchases.stream()
                 .mapToInt(Purchase::getPurchasedQuantity)
                 .sum();

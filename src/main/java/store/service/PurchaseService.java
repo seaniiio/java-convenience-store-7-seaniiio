@@ -1,5 +1,6 @@
 package store.service;
 
+import java.util.List;
 import java.util.Map;
 import store.domain.Purchases;
 import store.util.InputFormatter;
@@ -16,7 +17,7 @@ public class PurchaseService {
 
     public void setPurchase(String productAndQuantity) {
         Map<String, Integer> purchasesInput = inputFormatter.formatPurchaseInput(productAndQuantity);
-        Purchases.createPurchases(purchasesInput);
+        this.purchases.setPurchases(purchasesInput);
     }
 
     public void supplyPurchases() {
@@ -43,5 +44,17 @@ public class PurchaseService {
         if (decision.equals("Y")) {
             purchases.applyMembershipSale();
         }
+    }
+
+    public List<String> getPurchasesContent() {
+        return purchases.purchasesContent();
+    }
+
+    public Map<String, Integer> getGiftsContent() {
+        return purchases.getGiftsContent();
+    }
+
+    public List<String> getAmountsContent() {
+        return purchases.getAmountsContent();
     }
 }

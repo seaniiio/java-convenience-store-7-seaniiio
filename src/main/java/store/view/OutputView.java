@@ -2,7 +2,6 @@ package store.view;
 
 import java.util.List;
 import java.util.Map;
-import store.domain.Receipt;
 
 public class OutputView {
 
@@ -23,23 +22,19 @@ public class OutputView {
         System.out.println(message);
     }
 
-    public void printReceipt() {
+    public void printReceipt(List<String> pruchasesContent, Map<String, Integer> gifts, List<String> amounts) {
         System.out.println("===========W 편의점=============");
         System.out.println("상품명           수량      금액");
-
-        List<String> pruchasesContent = Receipt.getPurchasesContent();
         for (String purchase : pruchasesContent) {
             System.out.println(purchase);
         }
 
         System.out.println("===========증	정=============");
-        Map<String, Integer> gifts = Receipt.getGifts();
         for (String productName : gifts.keySet()) {
             System.out.println(String.format("%-15s%d", productName, gifts.get(productName)));
         }
 
         System.out.println("==============================");
-        List<String> amounts = Receipt.getAmounts();
         for (String amount : amounts) {
             System.out.println(amount);
         }
