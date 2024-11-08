@@ -115,16 +115,16 @@ public class Product {
     public int purchase(int quantity) {
         //현재 프로모션 적용되는 경우
         if (isPromotionApply()) {
-            int gift = (quantity / promotion.getBuyAndGetQuantity());
+            int maxGift = (promotionStock / promotion.getBuyAndGetQuantity());
             //프로모션 재고가 충분한 경우
             if (promotionStock >= quantity) {
                 promotionStock -= quantity;
-                return gift;
+                return quantity / promotion.getBuyAndGetQuantity();
             }
             //일반 재고도 필요한 경우
             normalStock -= (quantity - promotionStock);
             promotionStock = 0;
-            return gift;
+            return maxGift;
         }
         //프로모션 적용되지 않는 경우
         this.normalStock -= quantity;
