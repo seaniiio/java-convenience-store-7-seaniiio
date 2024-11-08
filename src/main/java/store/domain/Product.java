@@ -15,7 +15,10 @@ public class Product {
     public Product(String name, int price, int stock, String promotion) {
         this.name = name;
         this.price = price;
+        classifyNormalOrPromotion(stock, promotion);
+    }
 
+    private void classifyNormalOrPromotion(int stock, String promotion) {
         if (promotion.equals("null")) {
             this.normalStock = stock;
             return;
@@ -42,7 +45,7 @@ public class Product {
     public String getProductInformation() {
         String information = "";
 
-        if (promotion != null) {
+        if (promotionStock != -1) {
             information += getPromotionStockInformation();
         }
         if (normalStock != -1) {
@@ -52,17 +55,20 @@ public class Product {
     }
 
     private String getPromotionStockInformation() {
-        if (promotionStock == 0) {
-            return String.format("- %s %,d원 재고 없음 %s\n", this.name, this.price, this.promotion.getName());
+        if (this.promotion != null) {
+            if (promotionStock == 0) {
+                return String.format("- %s %,d원 재고 없음 %s\n", this.name, this.price, this.promotion.getName());
+            }
+            return String.format("- %s %,d원 %,d개 %s\n", this.name, this.price, this.promotionStock, this.promotion.getName());
         }
-        return String.format("- %s %,d원 %,d개 %s\n", this.name, this.price, this.promotionStock, this.promotion.getName());
+        return "";
     }
 
     private String getNormalStockInformation() {
         if (normalStock == 0) {
             return String.format("- %s %,d원 재고 없음\n", this.name, this.price);
         }
-        return String.format("- %s %,d원 %,d개\n", this.name, this.price, this.promotionStock);
+        return String.format("- %s %,d원 %,d개\n", this.name, this.price, this.normalStock);
     }
 
     public void addNewStock(String productInformation) { // 새로운 프로모션 / 일반 재고 추가
@@ -71,15 +77,7 @@ public class Product {
         int stock = Integer.parseInt(productInformations.get(2));
         String promotion = productInformations.get(3);
 
-        if (promotion.equals("null")) {
-            //일반 상품 추가
-            this.normalStock = stock;
-            return;
-        }
-        //프로모션 상품 추가
-        this.promotionStock = stock;
-        Promotions promotions = new Promotions();
-        this.promotion = promotions.getPromotion(name);
+        classifyNormalOrPromotion(stock, promotion);
     }
 
     private boolean isPromotionApply() {
