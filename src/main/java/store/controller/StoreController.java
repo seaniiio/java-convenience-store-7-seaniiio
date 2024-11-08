@@ -31,11 +31,18 @@ public class StoreController {
         List<String> promotions = Reader.readPromotions();
         storeService.set(products, promotions);
 
-        printInformation();
-        processInput();
-        purchaseService.supplyPurchases();
+        while (true) {
+            printInformation();
+            processInput();
+            purchaseService.supplyPurchases();
 
-        outputView.printReceipt(purchaseService.getPurchasesContent(), purchaseService.getGiftsContent());
+            outputView.printReceipt(purchaseService.getPurchasesContent(), purchaseService.getGiftsContent());
+
+            if (processContinueInput()) {
+                continue;
+            }
+            break;
+        }
     }
 
     private void printInformation() {
@@ -86,6 +93,11 @@ public class StoreController {
             }
         }
         purchaseService.setPurchaseConfirmation(purchaseConfirm);
+    }
+
+    private Boolean processContinueInput() {
+        String confirm = inputView.inputPurchaseMore();
+        return inputFormatter.formatIntentionInput(confirm);
     }
 
     private void continueUntilNormalInput(Runnable processSpecificInput) {
