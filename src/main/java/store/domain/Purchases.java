@@ -8,11 +8,7 @@ import java.util.Map;
 public class Purchases {
 
     private List<Purchase> purchases;
-    private int totalQuantity = 0;
-    private int totalAmount = 0;
     private boolean membershipConfirmation = false;
-    private int membershipSaleAmount = 0;
-    private int promotionSaleAmount = 0;
 
     public void setPurchases(Map<String, Integer> rawPurchases) {
         purchases = new ArrayList<>();
@@ -23,6 +19,7 @@ public class Purchases {
 
     public void supplyPurchases() {
         this.purchases.forEach(Purchase::supplyPurchase);
+        calculateAmounts();
     }
 
     public Map<String, Boolean> getPurchasePromotionStatus() {
@@ -86,40 +83,41 @@ public class Purchases {
         return gifts;
     }
 
-    public List<String> getAmountsContent() {
-        calculateAmounts();
-        List<String> resultMessage = new ArrayList<>();
-        resultMessage.add(String.format("%-14s%-8d%,6d", "총구매액", totalQuantity, totalAmount));
-        resultMessage.add(String.format("%-21s-%,-6d", "행사할인", promotionSaleAmount));
-        resultMessage.add(String.format("%-21s-%,-6d", "멤버십할인", membershipSaleAmount));
-        resultMessage.add(String.format("%-21s%,-6d", "내실돈", totalAmount));
-        return resultMessage;
-    }
-
     public void applyMembershipSale() {
         this.membershipConfirmation = true;
     }
 
     private void calculateAmounts() {
-        totalQuantity = purchases.stream()
+        int totalQuantity = purchases.stream()
                 .mapToInt(Purchase::getPurchasedQuantity)
                 .sum();
+        AmountInformation.TOTAL_AMOUNT.setQuantity(totalQuantity);
 
-        promotionSaleAmount = purchases.stream()
+        int totalAmount = purchases.stream()
+                .mapToInt(Purchase::getPurchasedAmount)
+                .sum();
+        AmountInformation.TOTAL_AMOUNT.setAmount(totalAmount);
+
+        int promotionSaleAmount = purchases.stream()
                 .mapToInt(Purchase::getPurchasedGiftAmount)
                 .sum();
+        AmountInformation.PROMOTION_DISCOUNT.setAmount(promotionSaleAmount);
 
+        int membershipSaleAmount = 0;
         if (membershipConfirmation) {
             membershipSaleAmount = (int) Math.round((totalAmount - promotionSaleAmount) * 0.3);
             if (membershipSaleAmount > 8000) {
                 membershipSaleAmount = 8000;
             }
+            AmountInformation.MEMBERSHIP_DISCOUNT.setAmount(membershipSaleAmount);
         }
 
-        totalAmount = purchases.stream()
+        int payAmount = purchases.stream()
                 .mapToInt(Purchase::getPurchasedAmount)
                 .sum();
-        totalAmount -= (promotionSaleAmount + membershipSaleAmount);
+        payAmount -= (promotionSaleAmount + membershipSaleAmount);
+
+        AmountInformation.PAY_AMOUNT.setAmount(payAmount);
     }
 
     private Purchase from(String productName) {

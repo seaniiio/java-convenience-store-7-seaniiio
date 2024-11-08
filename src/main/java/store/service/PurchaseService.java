@@ -49,8 +49,4 @@ public class PurchaseService {
     public Map<String, Integer> getGiftsContent() {
         return purchases.getGiftsContent();
     }
-
-    public List<String> getAmountsContent() {
-        return purchases.getAmountsContent();
-    }
 }
