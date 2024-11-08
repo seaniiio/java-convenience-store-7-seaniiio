@@ -44,14 +44,6 @@ public class Promotion {
         return !(now.isBefore(startDate) || now.isAfter(endDate));
     }
 
-    public boolean isOverBuyQuantity(int quantity) {
-        return quantity >= buyQuantity;
-    }
-
-    public int getBuyQuantity() {
-        return buyQuantity;
-    }
-
     public int getBuyAndGetQuantity() {
         return this.buyQuantity + this.getQuantity;
     }
