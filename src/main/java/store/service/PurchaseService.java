@@ -6,14 +6,10 @@ import store.domain.Purchases;
 
 public class PurchaseService {
 
-    private final Purchases purchases;
-
-    public PurchaseService() {
-        this.purchases = new Purchases();
-    }
+    private Purchases purchases;
 
     public void setPurchase(Map<String, Integer> purchasesInput) {
-        this.purchases.setPurchases(purchasesInput);
+        this.purchases = new Purchases(purchasesInput);
     }
 
     public void supplyPurchases() {
@@ -37,9 +33,7 @@ public class PurchaseService {
     }
 
     public void applyMembershipSale(boolean confirm) {
-        if (confirm) {
-            purchases.applyMembershipSale();
-        }
+        purchases.applyMembershipSale(confirm);
     }
 
     public List<String> getPurchasesContent() {

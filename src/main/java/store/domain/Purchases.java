@@ -8,13 +8,14 @@ import java.util.Map;
 public class Purchases {
 
     private List<Purchase> purchases;
-    private boolean membershipConfirmation = false;
+    private boolean membershipConfirmation;
 
-    public void setPurchases(Map<String, Integer> rawPurchases) {
+    public Purchases(Map<String, Integer> rawPurchases) {
         purchases = new ArrayList<>();
         for (String productName : rawPurchases.keySet()) {
             purchases.add(Purchase.createPurchase(productName, rawPurchases.get(productName)));
         }
+        membershipConfirmation = false;
     }
 
     public void supplyPurchases() {
@@ -83,8 +84,8 @@ public class Purchases {
         return gifts;
     }
 
-    public void applyMembershipSale() {
-        this.membershipConfirmation = true;
+    public void applyMembershipSale(boolean confirm) {
+        this.membershipConfirmation = confirm;
     }
 
     private void calculateAmounts() {
@@ -109,8 +110,8 @@ public class Purchases {
             if (membershipSaleAmount > 8000) {
                 membershipSaleAmount = 8000;
             }
-            AmountInformation.MEMBERSHIP_DISCOUNT.setAmount(membershipSaleAmount);
         }
+        AmountInformation.MEMBERSHIP_DISCOUNT.setAmount(membershipSaleAmount);
 
         int payAmount = purchases.stream()
                 .mapToInt(Purchase::getAmount)
