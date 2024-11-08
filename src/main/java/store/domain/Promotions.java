@@ -15,7 +15,7 @@ public class Promotions {
                 .forEach(promotions::add);
     }
 
-    public Promotion getPromotion(String name) {
+    public static Promotion of(String name) {
         for (Promotion promotion : promotions) {
             if (promotion.of(name) != null) {
                 return promotion.of(name);

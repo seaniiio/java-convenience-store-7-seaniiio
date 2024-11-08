@@ -25,8 +25,7 @@ public class Product {
         }
 
         this.promotionStock = stock;
-        Promotions promotions = new Promotions();
-        this.promotion = promotions.getPromotion(promotion);
+        this.promotion = Promotions.of(promotion);
     }
 
     public static Product createProduct(String productInformation) {
