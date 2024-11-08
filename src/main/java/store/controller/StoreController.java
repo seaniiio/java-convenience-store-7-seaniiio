@@ -44,10 +44,16 @@ public class StoreController {
     }
 
     private void processInput() {
-        continueUntilNormalInput(() -> purchaseService.setPurchase(inputView.getProductAndQuantity()));
+        continueUntilNormalInput(this::processPurchaseInput);
         continueUntilNormalInput(this::processPromotionAddInput);
         continueUntilNormalInput(this::processPurchaseConfirmInput);
         continueUntilNormalInput(this::processMembershipConfirmInput);
+    }
+
+    private void processPurchaseInput() {
+        String purchases = inputView.getProductAndQuantity();
+        Map<String, Integer> purchasesInput = inputFormatter.formatPurchaseInput(purchases);
+        purchaseService.setPurchase(purchasesInput);
     }
 
     private void processMembershipConfirmInput() {

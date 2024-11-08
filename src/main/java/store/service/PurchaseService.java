@@ -15,8 +15,7 @@ public class PurchaseService {
         this.purchases = new Purchases();
     }
 
-    public void setPurchase(String productAndQuantity) {
-        Map<String, Integer> purchasesInput = inputFormatter.formatPurchaseInput(productAndQuantity);
+    public void setPurchase(Map<String, Integer> purchasesInput) {
         this.purchases.setPurchases(purchasesInput);
     }
 
