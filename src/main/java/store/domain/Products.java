@@ -9,9 +9,11 @@ public class Products {
 
     public static void createProducts(List<String> givenProducts) {
         for (String givenProduct : givenProducts) {
-            //이미 products에 존재하는 경우
             String[] productInformation = givenProduct.split(",");
-            if (getProduct(productInformation[0]) != null) {
+            String productName = productInformation[0];
+
+            //이미 products에 존재하는 경우
+            if (of(productName) != null) {
                 addNewStockToProducts(givenProduct);
                 continue;
             }
@@ -21,7 +23,7 @@ public class Products {
         }
     }
 
-    public static Product getProduct(String productName) {
+    public static Product of(String productName) {
         for (Product product : products) {
             if (product.equalsTo(productName)) {
                 return product;
@@ -32,7 +34,7 @@ public class Products {
 
     public static void addNewStockToProducts(String givenProduct) {
         String[] productInformation = givenProduct.split(",");
-        Product product = getProduct(productInformation[0]);
+        Product product = of(productInformation[0]);
         product.addNewStock(givenProduct);
 
     }
