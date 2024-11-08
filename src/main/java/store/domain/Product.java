@@ -84,7 +84,7 @@ public class Product {
     }
 
     public boolean isOverPromotionBuyQuantity(int quantity) {
-        if (isPromotionApply() && !promotion.isOverBuyQuantity(quantity)) {
+        if (isPromotionApply() && !promotion.isOverPromotionQuantity(quantity)) {
             return false;
         }
         return true;
@@ -144,5 +144,16 @@ public class Product {
 
     public int getAmount(int quantity) {
         return quantity * price;
+    }
+
+    public boolean isPromotion() {
+        return !(this.promotion == null);
+    }
+
+    public int getPromotionQuantity() {
+        if (promotion == null) {
+            return 0;
+        }
+        return promotion.getPromotionQuantity();
     }
 }

@@ -19,7 +19,13 @@ class PurchaseTest {
     }
 
     @Test
-    public void 프로모션_혜택_미달_테스트() {
+    public void 재고_초과_구매_예외_테스트() {
+        Assertions.assertThatThrownBy(() -> Purchase.createPurchase("콜라", 21))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void 프로모션_혜택_미달_테스트_1() {
         Purchase purchase = Purchase.createPurchase("콜라", 1);
 
         Assertions.assertThat(purchase.getPromotionState())
@@ -27,8 +33,16 @@ class PurchaseTest {
     }
 
     @Test
-    public void 프로모션_혜택_달성_테스트() {
+    public void 프로모션_혜택_미달_테스트_2() {
         Purchase purchase = Purchase.createPurchase("콜라", 2);
+
+        Assertions.assertThat(purchase.getPromotionState())
+                .isEqualTo(true);
+    }
+
+    @Test
+    public void 프로모션_혜택_달성_테스트() {
+        Purchase purchase = Purchase.createPurchase("콜라", 3);
 
         Assertions.assertThat(purchase.getPromotionState())
                 .isEqualTo(false);

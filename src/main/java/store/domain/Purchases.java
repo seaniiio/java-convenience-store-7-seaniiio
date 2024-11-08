@@ -104,13 +104,7 @@ public class Purchases {
                 .sum();
         AmountInformation.PROMOTION_DISCOUNT.setAmount(promotionSaleAmount);
 
-        int membershipSaleAmount = 0;
-        if (membershipConfirmation) {
-            membershipSaleAmount = (int) Math.round((totalAmount - promotionSaleAmount) * 0.3);
-            if (membershipSaleAmount > 8000) {
-                membershipSaleAmount = 8000;
-            }
-        }
+        int membershipSaleAmount = calculateMembershipDiscount();
         AmountInformation.MEMBERSHIP_DISCOUNT.setAmount(membershipSaleAmount);
 
         int payAmount = purchases.stream()
@@ -119,6 +113,20 @@ public class Purchases {
         payAmount -= (promotionSaleAmount + membershipSaleAmount);
 
         AmountInformation.PAY_AMOUNT.setAmount(payAmount);
+    }
+
+    private int calculateMembershipDiscount() {
+        if (membershipConfirmation) {
+            int noPromotionAmounts = purchases.stream()
+                    .mapToInt(Purchase::getNotApplyPromotionAmounts)
+                    .sum();
+
+            if (noPromotionAmounts * 0.3 > 8000) {
+                return 8000;
+            }
+            return (int) (noPromotionAmounts * 0.3);
+        }
+        return 0;
     }
 
     private Purchase from(String productName) {

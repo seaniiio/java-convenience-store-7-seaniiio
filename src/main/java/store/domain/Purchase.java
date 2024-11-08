@@ -7,6 +7,7 @@ public class Purchase {
     private int giftNumber;
     private int amount;
     private int giftAmount;
+    private int promotionNotAppliedQuantity;
 
     private Purchase(Product product, int quantity) {
         this.product = product;
@@ -22,7 +23,7 @@ public class Purchase {
     }
 
     public boolean getPromotionState() {
-        // 프로모션이 적용되는데, 프로모션의 조건보다 적게 구입할 경우에 true
+        // 프로모션이 적용되는데, 프로모션보다 적게 구입할 경우에 true
         return !product.isOverPromotionBuyQuantity(this.quantity);
     }
     // 상품 이름과 관련된 주문 내역 return
@@ -32,11 +33,11 @@ public class Purchase {
     }
 
     public void addQuantityForPromotion() {
-        this.quantity = product.getPromotionBuyQuantity();
+        this.quantity = product.getPromotionQuantity();
     }
 
     public boolean canGetGift() {
-        return product.getPromotionBuyQuantity() <= quantity;
+        return product.getPromotionQuantity() <= quantity;
     }
 
     public Integer getGiftNumber() {
@@ -45,7 +46,16 @@ public class Purchase {
 
     public int getNotApplyPromotionCounts() {
         // 프로모션이 적용되지 않는 물품 수 return
-        return product.notApplyPromotionCounts(quantity);
+        this.promotionNotAppliedQuantity = product.notApplyPromotionCounts(quantity);
+        return promotionNotAppliedQuantity;
+    }
+
+    public int getNotApplyPromotionAmounts() {
+        //프로모션이 적용되지 않는 가격 return
+        if (product.isPromotion()) {
+            return product.getAmount(promotionNotAppliedQuantity);
+        }
+        return product.getAmount(quantity);
     }
 
     public void cancel() {
