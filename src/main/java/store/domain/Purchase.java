@@ -16,23 +16,23 @@ public class Purchase {
         this.giftAmount = 0;
     }
 
+    public static Purchase createPurchase(String productName, int quantity) {
+        validateProduct(productName, quantity);
+        return new Purchase(Products.of(productName), quantity);
+    }
+
     public boolean getPromotionState() {
         // 프로모션이 적용되는데, 프로모션의 조건보다 적게 구입할 경우에 true
         return !product.isOverPromotionBuyQuantity(this.quantity);
     }
-
     // 상품 이름과 관련된 주문 내역 return
+
     public boolean equalName(String productName) {
         return this.product.getName().equals(productName);
     }
 
     public void addQuantityForPromotion() {
         this.quantity = product.getPromotionBuyQuantity();
-    }
-
-    public static Purchase createPurchase(String productName, int quantity) {
-        validateProduct(productName, quantity);
-        return new Purchase(Products.of(productName), quantity);
     }
 
     public boolean canGetGift() {
