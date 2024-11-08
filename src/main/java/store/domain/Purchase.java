@@ -7,41 +7,13 @@ public class Purchase {
     private int giftNumber;
     private int amount;
     private int giftAmount;
-    private boolean confirmation;
 
     private Purchase(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
         this.giftNumber = 0;
-        this.confirmation = true;
         this.amount = 0;
         this.giftAmount = 0;
-    }
-
-    public void supplyPurchase() {
-        if (confirmation) {
-            this.giftNumber = this.product.purchase(this.quantity);
-            this.amount = product.getAmount(quantity);
-            this.giftAmount = product.getAmount(this.giftNumber);
-        }
-    }
-
-    public int getPurchasedAmount() {
-        if (confirmation) {
-            return this.amount;
-        }
-        return 0;
-    }
-
-    public int getPurchasedGiftAmount() {
-        if (confirmation) {
-            return this.giftAmount;
-        }
-        return 0;
-    }
-
-    public String getProductName() {
-        return product.getName();
     }
 
     public boolean getPromotionState() {
@@ -49,7 +21,7 @@ public class Purchase {
         return !product.isOverPromotionBuyQuantity(this.quantity);
     }
 
-    // 이름과 관련된 주문 내역 return
+    // 상품 이름과 관련된 주문 내역 return
     public boolean equalName(String productName) {
         return this.product.getName().equals(productName);
     }
@@ -58,15 +30,13 @@ public class Purchase {
         this.quantity = product.getPromotionBuyQuantity();
     }
 
-    public String purchaseContent() {
-        if (confirmation) {
-            return String.format("%-15s%-9d%-,6d", this.product.getName(), this.quantity, getTotalAmount());
-        }
-        return null;
+    public static Purchase createPurchase(String productName, int quantity) {
+        validateProduct(productName, quantity);
+        return new Purchase(Products.of(productName), quantity);
     }
 
     public boolean canGetGift() {
-        return confirmation && product.getPromotionBuyQuantity() <= quantity;
+        return product.getPromotionBuyQuantity() <= quantity;
     }
 
     public Integer getGiftNumber() {
@@ -79,12 +49,33 @@ public class Purchase {
     }
 
     public void cancel() {
-        this.confirmation = false;
+        this.quantity -= getNotApplyPromotionCounts();
     }
 
-    public static Purchase createPurchase(String productName, int quantity) {
-        validateProduct(productName, quantity);
-        return new Purchase(Products.of(productName), quantity);
+    public void supplyPurchase() {
+        this.giftNumber = this.product.purchase(this.quantity);
+        this.amount = product.getAmount(quantity);
+        this.giftAmount = product.getAmount(this.giftNumber);
+    }
+
+    public String purchaseContent() {
+        return String.format("%-15s%-9d%-,6d", this.product.getName(), this.quantity, getTotalAmount());
+    }
+
+    public int getPurchasedQuantity() {
+        return this.quantity;
+    }
+
+    public int getAmount() {
+        return this.amount;
+    }
+
+    public int getGiftAmount() {
+        return this.giftAmount;
+    }
+
+    public String getProductName() {
+        return product.getName();
     }
 
     private static void validateProduct(String productName, int quantity) {
@@ -100,12 +91,5 @@ public class Purchase {
 
     private int getTotalAmount() {
         return this.product.getAmount(this.quantity);
-    }
-
-    public int getPurchasedQuantity() {
-        if (confirmation) {
-            return this.quantity;
-        }
-        return 0;
     }
 }

@@ -104,14 +104,14 @@ public class Product {
         if (promotion == null) {
             return 0;
         }
-        int maxGift = promotionStock / promotion.getBuyAndGetQuantity();
-
-        if (quantity / promotion.getBuyAndGetQuantity() <= maxGift) {
+        int maxPromotionApplyAmount = (promotionStock / promotion.getBuyAndGetQuantity()) * promotion.getBuyAndGetQuantity();
+        if (quantity <= maxPromotionApplyAmount) {
             return 0;
         }
-        return quantity - maxGift * (promotionStock / promotion.getBuyAndGetQuantity());
+        return quantity - maxPromotionApplyAmount;
     }
 
+    //수정 필요!!!
     public int purchase(int quantity) {
         //현재 프로모션 적용되는 경우
         if (isPromotionApply()) {

@@ -58,7 +58,7 @@ public class Purchases {
     public void setPurchaseConfirmation(Map<String, Boolean> confirm) {
         for (String productName : confirm.keySet()) {
             if (!confirm.get(productName)) {
-                //구매 취소
+                //정가로 결제해야하는 수량만큼 제외한 후 결제를 진행
                 from(productName).cancel();
             }
         }
@@ -94,12 +94,12 @@ public class Purchases {
         AmountInformation.TOTAL_AMOUNT.setQuantity(totalQuantity);
 
         int totalAmount = purchases.stream()
-                .mapToInt(Purchase::getPurchasedAmount)
+                .mapToInt(Purchase::getAmount)
                 .sum();
         AmountInformation.TOTAL_AMOUNT.setAmount(totalAmount);
 
         int promotionSaleAmount = purchases.stream()
-                .mapToInt(Purchase::getPurchasedGiftAmount)
+                .mapToInt(Purchase::getGiftAmount)
                 .sum();
         AmountInformation.PROMOTION_DISCOUNT.setAmount(promotionSaleAmount);
 
@@ -113,7 +113,7 @@ public class Purchases {
         }
 
         int payAmount = purchases.stream()
-                .mapToInt(Purchase::getPurchasedAmount)
+                .mapToInt(Purchase::getAmount)
                 .sum();
         payAmount -= (promotionSaleAmount + membershipSaleAmount);
 
