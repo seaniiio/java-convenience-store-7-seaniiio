@@ -1,51 +1,60 @@
 package store.domain;
 
+import java.util.List;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import store.service.StoreService;
+import store.util.Reader;
 
 class ProductTest {
 
-    @Test
-    public void 일반_상품_생성_테스트() {
-        String product = "콜라,1000,10,null";
-        String expectedProductInformation = "- 콜라 1,000원 10개";
+    private StoreService storeService = new StoreService();
+    private Product product;
 
-        Assertions.assertThat(Product.createProduct(product).getProductInformation())
-                .isEqualTo(expectedProductInformation);
+    @BeforeEach
+    void set() {
+        List<String> products = Reader.readProducts();
+        List<String> promotions = Reader.readPromotions();
+        storeService.set(products, promotions);
+
+        product = new Product("비요뜨", 2100, 5, "반짝할인");
+        product.addNewStock("비요뜨,2100,5,null");
     }
 
     @Test
-    public void 프로모션_상품_생성_테스트() {
-        String product = "탄산수,1200,5,탄산2+1";
-        String expectedProductInformation = "- 탄산수 1,200원 5개 탄산2+1";
-
-        Assertions.assertThat(Product.createProduct(product).getProductInformation())
-                .isEqualTo(expectedProductInformation);
+    public void 재고_구매_가능_판단_테스트_1() {
+        Assertions.assertThat(product.canBuy(5))
+                .isEqualTo(true);
     }
 
     @Test
-    public void 재고_없는_일반_상품_생성_테스트() {
-        String product = "콜라,1000,0,null";
-        String expectedProductInformation = "- 콜라 1,000원 재고 없음";
-
-        Assertions.assertThat(Product.createProduct(product).getProductInformation())
-                .isEqualTo(expectedProductInformation);
-    }
-
-    @Test
-    public void 재고_없는_프로모션_상품_생성_테스트() {
-        String product = "탄산수,1200,0,탄산2+1";
-        String expectedProductInformation = "- 탄산수 1,200원 재고 없음 탄산2+1";
-
-        Assertions.assertThat(Product.createProduct(product).getProductInformation())
-                .isEqualTo(expectedProductInformation);
-    }
-
-    @Test
-    public void 재고_확인_테스트() {
-        Product product = Product.createProduct("탄산수,1200,5,탄산2+1");
-
-        Assertions.assertThat(product.canPurchase(7))
+    public void 재고_구매_가능_판단_테스트_2() {
+        Assertions.assertThat(product.canBuy(11))
                 .isEqualTo(false);
+    }
+
+    @Test
+    public void 구매_테스트_1() {
+        product.purchase(10);
+
+        Assertions.assertThat(product.getProductInformation())
+                .contains("- 비요뜨 2,100원 재고 없음 반짝할인", "- 비요뜨 2,100원 재고 없음");
+    }
+
+    @Test
+    public void 구매_테스트_2() {
+        product.purchase(8);
+
+        Assertions.assertThat(product.getProductInformation())
+                .contains("- 비요뜨 2,100원 재고 없음 반짝할인", "- 비요뜨 2,100원 2개");
+    }
+
+    @Test
+    public void 구매_테스트_3() {
+        product.purchase(3);
+
+        Assertions.assertThat(product.getProductInformation())
+                .contains("- 비요뜨 2,100원 2개 반짝할인", "- 비요뜨 2,100원 5개");
     }
 }
