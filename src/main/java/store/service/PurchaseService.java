@@ -38,4 +38,10 @@ public class PurchaseService {
     public void setPurchaseConfirmation(Map<String, Boolean> status) {
         purchases.setPurchaseConfirmation(status);
     }
+
+    public void applyMembershipSale(String decision) {
+        if (decision.equals("Y")) {
+            purchases.applyMembershipSale();
+        }
+    }
 }

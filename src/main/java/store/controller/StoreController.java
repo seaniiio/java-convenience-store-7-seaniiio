@@ -53,6 +53,8 @@ public class StoreController {
         }
         purchaseService.setPurchaseConfirmation(purchaseConfirm);
 
+        purchaseService.applyMembershipSale(inputView.inputMembershipSale());
+
         purchaseService.supplyPurchases();
         outputView.printReceipt();
     }

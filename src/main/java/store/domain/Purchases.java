@@ -8,6 +8,10 @@ import java.util.Map;
 public class Purchases {
 
     private static List<Purchase> purchases;
+    private static int totalAmount = 0;
+    private static boolean membershipConfirmation = false;
+    private static int membershipSaleAmount = 0;
+    private static int promotionSaleAmount = 0;
 
     public static void createPurchases(Map<String, Integer> rawPurchases) {
         purchases = new ArrayList<>();
@@ -20,10 +24,14 @@ public class Purchases {
         Map<String, Integer> gifts = new HashMap<>();
         for (Purchase purchase : purchases) {
             if (purchase.canGetGift()) {
-                gifts.put(purchase.getProductName(), purchase.getGiftAmount());
+                gifts.put(purchase.getProductName(), purchase.getGiftNumber());
             }
         }
         return gifts;
+    }
+
+    public static List<String> getAmounts() {
+        calculateAmounts();
     }
 
     public void supplyPurchases() {
@@ -79,6 +87,27 @@ public class Purchases {
                 .forEach(content::add);
 
         return content;
+    }
+
+    public void applyMembershipSale() {
+        this.membershipConfirmation = true;
+    }
+
+    private static void calculateAmounts() {
+        totalAmount = purchases.stream()
+                .mapToInt(Purchase::getAmount)
+                .sum();
+
+        promotionSaleAmount = purchases.stream()
+                .mapToInt(Purchase::getGiftAmount)
+                .sum();
+
+        if (membershipConfirmation) {
+            membershipSaleAmount = (int) Math.round((totalAmount - promotionSaleAmount) * 0.3);
+            if (membershipSaleAmount > 8000) {
+                membershipSaleAmount = 8000;
+            }
+        }
     }
 
     private Purchase from(String productName) {

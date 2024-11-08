@@ -4,20 +4,35 @@ public class Purchase {
 
     private final Product product;
     private int quantity;
+    private int giftNumber;
+    private int amount;
     private int giftAmount;
+
     private boolean confirmation;
 
     private Purchase(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
-        this.giftAmount = 0;
+        this.giftNumber = 0;
         this.confirmation = true;
+        this.amount = 0;
+        this.giftAmount = 0;
     }
 
     public void supplyPurchase() {
         if (confirmation) {
-            this.giftAmount = this.product.purchase(this.quantity);
+            this.giftNumber = this.product.purchase(this.quantity);
+            this.amount = product.getAmount(quantity);
+            this.giftAmount = product.getAmount(this.giftNumber);
         }
+    }
+
+    public int getAmount() {
+        return this.amount;
+    }
+
+    public int getGiftAmount() {
+        return this.giftAmount;
     }
 
     public String getProductName() {
@@ -49,8 +64,8 @@ public class Purchase {
         return confirmation && product.getPromotionBuyQuantity() <= quantity;
     }
 
-    public Integer getGiftAmount() {
-        return this.giftAmount;
+    public Integer getGiftNumber() {
+        return this.giftNumber;
     }
 
     public int getNotApplyPromotionCounts() {
