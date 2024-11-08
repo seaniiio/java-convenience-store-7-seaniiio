@@ -28,4 +28,24 @@ class InputFormatterTest {
         Assertions.assertThatThrownBy(() -> inputFormatter.formatPurchaseInput(productAndQuantity))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    public void 입력한_의사_변환_테스트() {
+        String yesInput = "Y";
+        String noInput = "N";
+
+        Assertions.assertThat(inputFormatter.formatIntentionInput(yesInput))
+                .isEqualTo(true);
+
+        Assertions.assertThat(inputFormatter.formatIntentionInput(noInput))
+                .isEqualTo(false);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"몰라", "YY", "NN", "네", "아니오", "\n", " ", ""})
+    public void 입력한_의사_형식_예외_테스트(String intention) {
+        Assertions.assertThatThrownBy(() -> inputFormatter.formatIntentionInput(intention))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
 }

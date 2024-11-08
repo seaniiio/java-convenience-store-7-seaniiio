@@ -16,6 +16,14 @@ public class InputFormatter {
         return parsePurchase(purchases);
     }
 
+    public boolean formatIntentionInput(String intentionInput) {
+        validateIntentionInputFormat(intentionInput);
+        if (intentionInput.equals("Y")) {
+            return true;
+        }
+        return false;
+    }
+
     private void validatePurchaseInputFormat(String productAndQuantity) {
         try {
             productAndQuantity.split(",");
@@ -46,5 +54,11 @@ public class InputFormatter {
         }
 
         return productAndQuantity;
+    }
+
+    private void validateIntentionInputFormat(String intentionInput) {
+        if (!(intentionInput.equals("Y") | intentionInput.equals("N"))) {
+            throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
+        }
     }
 }

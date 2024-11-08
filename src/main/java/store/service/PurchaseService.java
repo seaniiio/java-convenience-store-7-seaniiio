@@ -40,8 +40,8 @@ public class PurchaseService {
         purchases.setPurchaseConfirmation(status);
     }
 
-    public void applyMembershipSale(String decision) {
-        if (decision.equals("Y")) {
+    public void applyMembershipSale(boolean confirm) {
+        if (confirm) {
             purchases.applyMembershipSale();
         }
     }
