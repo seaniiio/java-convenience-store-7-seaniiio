@@ -39,7 +39,7 @@ public class Products {
 
     }
 
-    public List<String> getInformations() {
+    public List<String> getProductsInformation() {
         return products.stream()
                 .map(Product::getProductInformation)
                 .toList();

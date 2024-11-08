@@ -13,6 +13,6 @@ public class StoreService {
 
     public List<String> getProductsInformation() {
         Products products = new Products();
-        return products.getInformations();
+        return products.getProductsInformation();
     }
 }
