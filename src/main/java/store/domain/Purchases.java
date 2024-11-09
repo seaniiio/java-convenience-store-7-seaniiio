@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import store.dto.AmountsDto;
 import store.dto.GiftsDto;
-import store.dto.ProductsDto;
+import store.dto.PurchasedProductsDto;
 
 public class Purchases {
 
@@ -72,10 +72,10 @@ public class Purchases {
         }
     }
 
-    public List<ProductsDto> purchasesContent() {
-        List<ProductsDto> receipts = new ArrayList<>();
+    public List<PurchasedProductsDto> purchasesContent() {
+        List<PurchasedProductsDto> receipts = new ArrayList<>();
         for (Purchase purchase : purchases) {
-            receipts.add(new ProductsDto(purchase.getProductName(), purchase.getPurchasedQuantity(), purchase.getAmount()));
+            receipts.add(new PurchasedProductsDto(purchase.getProductName(), purchase.getPurchasedQuantity(), purchase.getAmount()));
         }
         return receipts;
     }

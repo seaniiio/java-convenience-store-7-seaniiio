@@ -1,26 +1,32 @@
 package store.dto;
 
 public class ProductsDto {
+    
+    private final String productName;
+    private final int price;
+    private final int stock;
+    private final String promotionName;
 
-    private String productName;
-    private int quantity;
-    private int amount;
-
-    public ProductsDto(String productName, int quantity, int amount) {
+    public ProductsDto(String productName, int price, int stock, String promotionName) {
         this.productName = productName;
-        this.quantity = quantity;
-        this.amount = amount;
+        this.price = price;
+        this.stock = stock;
+        this.promotionName = promotionName;
     }
 
     public String getProductName() {
         return productName;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getPrice() {
+        return price;
     }
 
-    public int getAmount() {
-        return amount;
+    public int getStock() {
+        return stock;
+    }
+
+    public String getPromotionName() {
+        return promotionName;
     }
 }

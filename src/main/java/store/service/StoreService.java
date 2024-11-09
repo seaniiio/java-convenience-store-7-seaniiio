@@ -3,6 +3,7 @@ package store.service;
 import java.util.List;
 import store.domain.Products;
 import store.domain.Promotions;
+import store.dto.ProductsDto;
 
 public class StoreService {
 
@@ -11,7 +12,7 @@ public class StoreService {
         Products.setProducts(givenProducts);
     }
 
-    public List<String> getProductsInformation() {
+    public List<ProductsDto> getProductsInformation() {
         return Products.getProductsInformation();
     }
 }

@@ -2,6 +2,7 @@ package store.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import store.dto.ProductsDto;
 
 public class Products {
 
@@ -41,9 +42,16 @@ public class Products {
 
     }
 
-    public static List<String> getProductsInformation() {
-        return products.stream()
-                .map(Product::getProductInformation)
-                .toList();
+    public static List<ProductsDto> getProductsInformation() {
+        List<ProductsDto> productsInformation = new ArrayList<>();
+        for (Product product : products) {
+            if (product.hasPromotionStock()) {
+                productsInformation.add(product.getPromotionInformation());
+            }
+            if (product.hasNormalStock()) {
+                productsInformation.add(product.getNormalInformation());
+            }
+        }
+        return productsInformation;
     }
 }

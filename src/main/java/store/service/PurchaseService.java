@@ -5,7 +5,7 @@ import java.util.Map;
 import store.domain.Purchases;
 import store.dto.AmountsDto;
 import store.dto.GiftsDto;
-import store.dto.ProductsDto;
+import store.dto.PurchasedProductsDto;
 
 public class PurchaseService {
 
@@ -39,7 +39,7 @@ public class PurchaseService {
         purchases.applyMembershipSale(confirm);
     }
 
-    public List<ProductsDto> getPurchasesContent() {
+    public List<PurchasedProductsDto> getPurchasesContent() {
         return purchases.purchasesContent();
     }
 

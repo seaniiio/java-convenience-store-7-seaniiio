@@ -3,6 +3,7 @@ package store.domain;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import store.dto.ProductsDto;
 
 public class Product {
 
@@ -39,35 +40,6 @@ public class Product {
 
     public boolean equalsTo(String name) {
         return this.name.equals(name);
-    }
-
-    public String getProductInformation() {
-        String information = "";
-
-        if (promotionStock != -1) {
-            information += getPromotionStockInformation();
-        }
-        if (normalStock != -1) {
-            information += getNormalStockInformation();
-        }
-        return information;
-    }
-
-    private String getPromotionStockInformation() {
-        if (this.promotion != null) {
-            if (promotionStock == 0) {
-                return String.format("- %s %,d원 재고 없음 %s\n", this.name, this.price, this.promotion.getName());
-            }
-            return String.format("- %s %,d원 %,d개 %s\n", this.name, this.price, this.promotionStock, this.promotion.getName());
-        }
-        return "";
-    }
-
-    private String getNormalStockInformation() {
-        if (normalStock == 0) {
-            return String.format("- %s %,d원 재고 없음\n", this.name, this.price);
-        }
-        return String.format("- %s %,d원 %,d개\n", this.name, this.price, this.normalStock);
     }
 
     public void addNewStock(String productInformation) { // 새로운 프로모션 / 일반 재고 추가
@@ -148,5 +120,21 @@ public class Product {
             return 0;
         }
         return promotion.getPromotionQuantity();
+    }
+
+    public boolean hasNormalStock() {
+        return normalStock >= 0;
+    }
+
+    public boolean hasPromotionStock() {
+        return promotionStock >= 0;
+    }
+
+    public ProductsDto getNormalInformation() {
+        return new ProductsDto(this.name, this.price, this.normalStock, "");
+    }
+
+    public ProductsDto getPromotionInformation() {
+        return new ProductsDto(this.name, this.price, this.promotionStock, this.promotion.getName());
     }
 }

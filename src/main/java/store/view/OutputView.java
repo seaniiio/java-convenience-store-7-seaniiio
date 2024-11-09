@@ -4,6 +4,7 @@ import java.util.List;
 import store.dto.AmountsDto;
 import store.dto.GiftsDto;
 import store.dto.ProductsDto;
+import store.dto.PurchasedProductsDto;
 
 public class OutputView {
 
@@ -11,15 +12,20 @@ public class OutputView {
         System.out.println("안녕하세요. W편의점입니다.");
     }
 
-    public void printProductsInformation(List<String> productsInformation) {
+    public void printProductsInformation(List<ProductsDto> products) {
         System.out.println("현재 보유하고 있는 상품입니다." + System.lineSeparator());
 
-        for (String productInformation : productsInformation) {
-            System.out.printf(productInformation);
+        for (ProductsDto product : products) {
+            if (product.getStock() == 0) {
+                System.out.println(String.format("- %s %,d원 재고 없음 %s", product.getProductName(), product.getPrice(),
+                        product.getPromotionName()));
+                continue;
+            }
+            System.out.println(String.format("- %s %,d원 %,d개 %s", product.getProductName(), product.getPrice(), product.getStock(), product.getPromotionName()));
         }
     }
 
-    public void printReceipt(List<ProductsDto> purchasesContent, List<GiftsDto> gifts, List<AmountsDto> amounts) {
+    public void printReceipt(List<PurchasedProductsDto> purchasesContent, List<GiftsDto> gifts, List<AmountsDto> amounts) {
         printProductReceipt(purchasesContent);
         printGiftReceipt(gifts);
         printAmountReceipt(amounts);
@@ -43,10 +49,10 @@ public class OutputView {
         }
     }
 
-    private void printProductReceipt(List<ProductsDto> purchasesContent) {
+    private void printProductReceipt(List<PurchasedProductsDto> purchasesContent) {
         System.out.println("===========W 편의점=============");
         System.out.println(String.format("%-14s%-8s%-6s", "상품명", "수량", "금액"));
-        for (ProductsDto purchase : purchasesContent) {
+        for (PurchasedProductsDto purchase : purchasesContent) {
             System.out.println(String.format("%-14s%,-8d%,-6d", purchase.getProductName(), purchase.getQuantity(), purchase.getAmount()));
         }
     }
