@@ -125,13 +125,6 @@ public class Purchases {
                 .sum();
     }
 
-    private void calculateTotalPayAmount() {
-        this.totalPayAmount = purchases.stream()
-                .mapToInt(Purchase::getAmount)
-                .sum();
-        totalPayAmount -= (this.promotionDiscountAmount + this.membershipDiscountAmount);
-    }
-
     private void calculatePromotionDiscountAmount() {
         this.promotionDiscountAmount = purchases.stream()
                 .mapToInt(Purchase::getGiftAmount)
@@ -144,14 +137,16 @@ public class Purchases {
                     .mapToInt(Purchase::getNotApplyPromotionAmounts)
                     .sum();
 
-            if (noPromotionAmounts * 0.3 > 8000) {
-                this.membershipDiscountAmount = 8000;
-                return;
-            }
-            this.membershipDiscountAmount = (int) (noPromotionAmounts * 0.3);
-            return;
+            this.membershipDiscountAmount = Math.min((int) (noPromotionAmounts * 0.3), 8000);
         }
-        this.membershipDiscountAmount = 0;
+    }
+
+    private void calculateTotalPayAmount() {
+        this.totalPayAmount = purchases.stream()
+                .mapToInt(Purchase::getAmount)
+                .sum();
+
+        totalPayAmount -= (this.promotionDiscountAmount + this.membershipDiscountAmount);
     }
 
     private Purchase from(String productName) {
