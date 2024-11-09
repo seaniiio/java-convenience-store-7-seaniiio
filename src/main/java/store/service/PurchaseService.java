@@ -15,8 +15,8 @@ public class PurchaseService {
         this.purchases = new Purchases(purchasesInput);
     }
 
-    public void supplyPurchases() {
-        purchases.supplyPurchases();
+    public void applyPurchases() {
+        purchases.applyPurchases();
     }
 
     public Map<String, Boolean> getPurchasePromotionStatus() {

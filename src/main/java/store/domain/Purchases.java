@@ -25,8 +25,8 @@ public class Purchases {
         }
     }
 
-    public void supplyPurchases() {
-        this.purchases.forEach(Purchase::supplyPurchase);
+    public void applyPurchases() {
+        this.purchases.forEach(Purchase::applyPurchase);
         calculateAmounts();
     }
 

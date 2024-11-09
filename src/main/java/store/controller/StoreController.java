@@ -43,7 +43,7 @@ public class StoreController {
         this.purchaseService = new PurchaseService();
         printStoreInformation();
         processInput();
-        purchaseService.supplyPurchases();
+        purchaseService.applyPurchases();
         outputView.printReceipt(purchaseService.getPurchasesContent(), purchaseService.getGifts(), purchaseService.getAmounts());
     }
 
