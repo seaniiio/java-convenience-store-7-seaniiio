@@ -42,7 +42,7 @@ public class Product {
     }
 
     public boolean isOverPromotionBuyQuantity(int quantity) {
-        if (isPromotionApply() && promotion.getPromotionApplyQuantity() <= quantity) {
+        if (isPromotionApply() && promotion.getPromotionApplyQuantity() > quantity) {
             return false;
         }
         return true;
