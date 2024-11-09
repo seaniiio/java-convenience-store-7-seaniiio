@@ -2,7 +2,9 @@ package store.view;
 
 import java.util.List;
 import java.util.Map;
-import store.domain.AmountInformation;
+import store.dto.AmountsDto;
+import store.dto.GiftsDto;
+import store.dto.ProductsDto;
 
 public class OutputView {
 
@@ -11,34 +13,32 @@ public class OutputView {
     }
 
     public void printProductsInformation(List<String> productsInformation) {
-        System.out.println("현재 보유하고 있는 상품입니다.");
-        System.out.println();
+        System.out.println("현재 보유하고 있는 상품입니다." + System.lineSeparator());
 
         for (String productInformation : productsInformation) {
             System.out.printf(productInformation);
         }
     }
 
-    public void printMessage(String message) {
-        System.out.println(message);
-    }
-
-    public void printReceipt(List<String> pruchasesContent, Map<String, Integer> gifts) {
+    public void printReceipt(List<ProductsDto> purchasesContent, List<GiftsDto> gifts, List<AmountsDto> amounts) {
         System.out.println("===========W 편의점=============");
-        System.out.println("상품명           수량      금액");
-        for (String purchase : pruchasesContent) {
-            System.out.println(purchase);
+        System.out.println(String.format("%-14s%-8s%-6s", "상품명", "수량", "금액"));
+        for (ProductsDto purchase : purchasesContent) {
+            System.out.println(String.format("%-14s%,-8d%,-6d", purchase.getProductName(), purchase.getQuantity(), purchase.getAmount()));
         }
 
         System.out.println("===========증	정=============");
-        for (String productName : gifts.keySet()) {
-            System.out.println(String.format("%-15s%d", productName, gifts.get(productName)));
+        for (GiftsDto gift : gifts) {
+            System.out.println(String.format("%-14s%d", gift.getProductName(), gift.getQuantity()));
         }
 
         System.out.println("==============================");
-        System.out.println(AmountInformation.TOTAL_AMOUNT.getAmountInformation());
-        System.out.println(AmountInformation.PROMOTION_DISCOUNT.getAmountInformation());
-        System.out.println(AmountInformation.MEMBERSHIP_DISCOUNT.getAmountInformation());
-        System.out.println(AmountInformation.PAY_AMOUNT.getAmountInformation());
+        for (AmountsDto amount : amounts) {
+            if (amount.getInformation().equals("총구매액")) {
+                System.out.println(String.format("%-14s%-8d%,6d", amount.getInformation(), amount.getQuantity(), amount.getAmount()));
+                continue;
+            }
+            System.out.println(String.format("%-22s%-,6d", amount.getInformation(), amount.getAmount()));
+        }
     }
 }

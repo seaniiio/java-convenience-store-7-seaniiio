@@ -68,10 +68,6 @@ public class Purchase {
         this.giftAmount = product.getAmount(this.giftNumber);
     }
 
-    public String purchaseContent() {
-        return String.format("%-15s%-9d%-,6d", this.product.getName(), this.quantity, getTotalAmount());
-    }
-
     public int getPurchasedQuantity() {
         return this.quantity;
     }
@@ -97,9 +93,5 @@ public class Purchase {
         if (!product.canBuy(quantity)) {
             throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
         }
-    }
-
-    private int getTotalAmount() {
-        return this.product.getAmount(this.quantity);
     }
 }

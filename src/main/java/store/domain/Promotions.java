@@ -9,7 +9,7 @@ public class Promotions {
 
     private Promotions() {}
 
-    public static void createPromotions(List<String> givenPromotions) {
+    public static void setPromotions(List<String> givenPromotions) {
         promotions = new ArrayList<>();
 
         givenPromotions.stream()

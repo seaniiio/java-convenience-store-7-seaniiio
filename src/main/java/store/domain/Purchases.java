@@ -4,18 +4,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import store.dto.AmountsDto;
+import store.dto.GiftsDto;
+import store.dto.ProductsDto;
 
 public class Purchases {
 
     private List<Purchase> purchases;
-    private boolean membershipConfirmation;
+    private boolean membershipConfirmation = false;
+    private int totalQuantity = 0;
+    private int totalAmount = 0;
+    private int promotionDiscountAmount = 0;
+    private int membershipDiscountAmount = 0;
+    private int totalPayAmount = 0;
 
     public Purchases(Map<String, Integer> rawPurchases) {
         purchases = new ArrayList<>();
         for (String productName : rawPurchases.keySet()) {
             purchases.add(Purchase.createPurchase(productName, rawPurchases.get(productName)));
         }
-        membershipConfirmation = false;
     }
 
     public void supplyPurchases() {
@@ -65,20 +72,19 @@ public class Purchases {
         }
     }
 
-    public List<String> purchasesContent() {
-        List<String> content = new ArrayList<>();
-        purchases.stream()
-                .map(Purchase::purchaseContent)
-                .forEach(content::add);
-
-        return content;
+    public List<ProductsDto> purchasesContent() {
+        List<ProductsDto> receipts = new ArrayList<>();
+        for (Purchase purchase : purchases) {
+            receipts.add(new ProductsDto(purchase.getProductName(), purchase.getPurchasedQuantity(), purchase.getAmount()));
+        }
+        return receipts;
     }
 
-    public Map<String, Integer> getGiftsContent() {
-        Map<String, Integer> gifts = new HashMap<>();
+    public List<GiftsDto> getGiftsContent() {
+        List<GiftsDto> gifts = new ArrayList<>();
         for (Purchase purchase : purchases) {
-            if (purchase.canGetGift()) {
-                gifts.put(purchase.getProductName(), purchase.getGiftNumber());
+            if (purchase.getGiftNumber() > 0) {
+                gifts.add(new GiftsDto(purchase.getProductName(), purchase.getGiftNumber()));
             }
         }
         return gifts;
@@ -88,45 +94,64 @@ public class Purchases {
         this.membershipConfirmation = confirm;
     }
 
-    private void calculateAmounts() {
-        int totalQuantity = purchases.stream()
-                .mapToInt(Purchase::getPurchasedQuantity)
-                .sum();
-        AmountInformation.TOTAL_AMOUNT.setQuantity(totalQuantity);
+    public List<AmountsDto> getAmounts() {
+        List<AmountsDto> amounts = new ArrayList<>();
 
-        int totalAmount = purchases.stream()
-                .mapToInt(Purchase::getAmount)
-                .sum();
-        AmountInformation.TOTAL_AMOUNT.setAmount(totalAmount);
+        amounts.add(new AmountsDto("총구매액", this.totalQuantity, this.totalAmount));
+        amounts.add(new AmountsDto("행사할인", -1, (-1) * this.promotionDiscountAmount));
+        amounts.add(new AmountsDto("멤버십할인", -1, (-1) * this.membershipDiscountAmount));
+        amounts.add(new AmountsDto("내실돈", -1, this.totalPayAmount));
 
-        int promotionSaleAmount = purchases.stream()
-                .mapToInt(Purchase::getGiftAmount)
-                .sum();
-        AmountInformation.PROMOTION_DISCOUNT.setAmount(promotionSaleAmount);
-
-        int membershipSaleAmount = calculateMembershipDiscount();
-        AmountInformation.MEMBERSHIP_DISCOUNT.setAmount(membershipSaleAmount);
-
-        int payAmount = purchases.stream()
-                .mapToInt(Purchase::getAmount)
-                .sum();
-        payAmount -= (promotionSaleAmount + membershipSaleAmount);
-
-        AmountInformation.PAY_AMOUNT.setAmount(payAmount);
+        return amounts;
     }
 
-    private int calculateMembershipDiscount() {
+    private void calculateAmounts() {
+        calculateTotalQuantity();
+        calculateTotalAmount();
+        calculatePromotionDiscountAmount();
+        calculateMembershipDiscountAmount();
+        calculateTotalPayAmount();
+    }
+
+    private void calculateTotalQuantity() {
+        this.totalQuantity = purchases.stream()
+                .mapToInt(Purchase::getPurchasedQuantity)
+                .sum();
+    }
+
+    private void calculateTotalAmount() {
+        this.totalAmount = purchases.stream()
+                .mapToInt(Purchase::getAmount)
+                .sum();
+    }
+
+    private void calculateTotalPayAmount() {
+        this.totalPayAmount = purchases.stream()
+                .mapToInt(Purchase::getAmount)
+                .sum();
+        totalPayAmount -= (this.promotionDiscountAmount + this.membershipDiscountAmount);
+    }
+
+    private void calculatePromotionDiscountAmount() {
+        this.promotionDiscountAmount = purchases.stream()
+                .mapToInt(Purchase::getGiftAmount)
+                .sum();
+    }
+
+    private void calculateMembershipDiscountAmount() {
         if (membershipConfirmation) {
             int noPromotionAmounts = purchases.stream()
                     .mapToInt(Purchase::getNotApplyPromotionAmounts)
                     .sum();
 
             if (noPromotionAmounts * 0.3 > 8000) {
-                return 8000;
+                this.membershipDiscountAmount = 8000;
+                return;
             }
-            return (int) (noPromotionAmounts * 0.3);
+            this.membershipDiscountAmount = (int) (noPromotionAmounts * 0.3);
+            return;
         }
-        return 0;
+        this.membershipDiscountAmount = 0;
     }
 
     private Purchase from(String productName) {

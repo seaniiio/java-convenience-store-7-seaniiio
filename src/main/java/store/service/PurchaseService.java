@@ -3,6 +3,9 @@ package store.service;
 import java.util.List;
 import java.util.Map;
 import store.domain.Purchases;
+import store.dto.AmountsDto;
+import store.dto.GiftsDto;
+import store.dto.ProductsDto;
 
 public class PurchaseService {
 
@@ -36,11 +39,15 @@ public class PurchaseService {
         purchases.applyMembershipSale(confirm);
     }
 
-    public List<String> getPurchasesContent() {
+    public List<ProductsDto> getPurchasesContent() {
         return purchases.purchasesContent();
     }
 
-    public Map<String, Integer> getGiftsContent() {
+    public List<GiftsDto> getGifts() {
         return purchases.getGiftsContent();
+    }
+
+    public List<AmountsDto> getAmounts() {
+        return purchases.getAmounts();
     }
 }
