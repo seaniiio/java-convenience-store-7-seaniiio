@@ -29,7 +29,7 @@ public class StoreController {
 
         while (true) {
             this.purchaseService = new PurchaseService();
-            continueUntilNormalInput(this::processPurchase);
+            this.processPurchase();
             if (!continueUntilNormalInput(this::processContinueInput)) {
                 break;
             }
