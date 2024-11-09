@@ -7,7 +7,6 @@ public enum AmountInformation {
     MEMBERSHIP_DISCOUNT("멤버십할인"),
     PAY_AMOUNT("내실돈");
 
-
     private final String information;
     private int quantity = 0;
     private int amount = 0;

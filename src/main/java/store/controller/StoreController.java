@@ -17,19 +17,19 @@ public class StoreController {
     private final InputView inputView;
     private final OutputView outputView;
     private final StoreService storeService;
-    private final PurchaseService purchaseService;
+    private PurchaseService purchaseService;
 
     public StoreController() {
         this.inputView = new InputView();
         this.outputView = new OutputView();
         this.storeService = new StoreService();
-        this.purchaseService = new PurchaseService();
     }
 
     public void run() {
         setStore();
 
         while (true) {
+            this.purchaseService = new PurchaseService();
             continueUntilNormalInput(this::processPurchase);
             if (!continueUntilNormalInput(this::processContinueInput)) {
                 break;
