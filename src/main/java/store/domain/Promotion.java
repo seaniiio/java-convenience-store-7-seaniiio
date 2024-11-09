@@ -44,19 +44,11 @@ public class Promotion {
         return !(now.isBefore(startDate) || now.isAfter(endDate));
     }
 
-    public int getBuyAndGetQuantity() {
+    public int getPromotionApplyQuantity() {
         return this.buyQuantity + this.getQuantity;
     }
 
     public String getName() {
         return this.name;
-    }
-
-    public boolean isOverPromotionQuantity(int quantity) {
-        return this.buyQuantity + this.getQuantity <= quantity;
-    }
-
-    public int getPromotionQuantity() {
-        return this.buyQuantity + this.getQuantity;
     }
 }

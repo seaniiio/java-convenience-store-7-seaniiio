@@ -26,7 +26,6 @@ public class Purchase {
         // 프로모션이 적용되는데, 프로모션보다 적게 구입할 경우에 true
         return !product.isOverPromotionBuyQuantity(this.quantity);
     }
-    // 상품 이름과 관련된 주문 내역 return
 
     public boolean equalName(String productName) {
         return this.product.getName().equals(productName);
@@ -34,10 +33,6 @@ public class Purchase {
 
     public void addQuantityForPromotion() {
         this.quantity = product.getPromotionQuantity();
-    }
-
-    public boolean canGetGift() {
-        return product.getPromotionQuantity() <= quantity;
     }
 
     public Integer getGiftNumber() {
@@ -52,7 +47,7 @@ public class Purchase {
 
     public int getNotApplyPromotionAmounts() {
         //프로모션이 적용되지 않는 가격 return
-        if (product.isPromotion()) {
+        if (product.isPromotionApply()) {
             return product.getAmount(promotionNotAppliedQuantity);
         }
         return product.getAmount(quantity);

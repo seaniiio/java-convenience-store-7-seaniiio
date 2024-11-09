@@ -29,4 +29,13 @@ class PromotionTest {
 
         Assertions.assertThat(promotion.isApply()).isEqualTo(false);
     }
+
+    @Test
+    public void 프로모션_적용_개수_얻기_테스트() {
+        String promotionInformation = "MD추천상품,3,1,2024-01-01,2025-12-31";
+        Promotion promotion = Promotion.createPromotion(promotionInformation);
+
+        Assertions.assertThat(promotion.getPromotionApplyQuantity())
+                .isEqualTo(4);
+    }
 }

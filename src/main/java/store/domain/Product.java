@@ -42,7 +42,7 @@ public class Product {
     }
 
     public boolean isOverPromotionBuyQuantity(int quantity) {
-        if (isPromotionApply() && !promotion.isOverPromotionQuantity(quantity)) {
+        if (isPromotionApply() && promotion.getPromotionApplyQuantity() <= quantity) {
             return false;
         }
         return true;
@@ -59,7 +59,7 @@ public class Product {
         if (!isPromotionApply()) {
             return 0;
         }
-        int maxPromotionApplyQuantity = (promotionStock / promotion.getBuyAndGetQuantity()) * promotion.getBuyAndGetQuantity();
+        int maxPromotionApplyQuantity = (promotionStock / promotion.getPromotionApplyQuantity()) * promotion.getPromotionApplyQuantity();
         if (quantity <= maxPromotionApplyQuantity) {
             return 0;
         }
@@ -92,7 +92,7 @@ public class Product {
         if (promotion == null) {
             return 0;
         }
-        return promotion.getPromotionQuantity();
+        return promotion.getPromotionApplyQuantity();
     }
 
     public ProductsDto getNormalInformation() {
@@ -110,11 +110,11 @@ public class Product {
     }
 
     private int purchaseWithPromotion(int quantity) {
-        int maxGift = (promotionStock / promotion.getBuyAndGetQuantity());
+        int maxGift = (promotionStock / promotion.getPromotionApplyQuantity());
 
         if (promotionStock >= quantity) {
             promotionStock -= quantity;
-            return quantity / promotion.getBuyAndGetQuantity();
+            return quantity / promotion.getPromotionApplyQuantity();
         }
 
         normalStock -= (quantity - promotionStock);
@@ -129,6 +129,6 @@ public class Product {
         }
 
         this.promotionStock = stock;
-        this.promotion = Promotions.of(promotion);
+        this.promotion = Promotions.getPromotion(promotion);
     }
 }
