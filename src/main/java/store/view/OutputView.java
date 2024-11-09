@@ -1,7 +1,6 @@
 package store.view;
 
 import java.util.List;
-import java.util.Map;
 import store.dto.AmountsDto;
 import store.dto.GiftsDto;
 import store.dto.ProductsDto;
@@ -21,17 +20,12 @@ public class OutputView {
     }
 
     public void printReceipt(List<ProductsDto> purchasesContent, List<GiftsDto> gifts, List<AmountsDto> amounts) {
-        System.out.println("===========W 편의점=============");
-        System.out.println(String.format("%-14s%-8s%-6s", "상품명", "수량", "금액"));
-        for (ProductsDto purchase : purchasesContent) {
-            System.out.println(String.format("%-14s%,-8d%,-6d", purchase.getProductName(), purchase.getQuantity(), purchase.getAmount()));
-        }
+        printProductReceipt(purchasesContent);
+        printGiftReceipt(gifts);
+        printAmountReceipt(amounts);
+    }
 
-        System.out.println("===========증	정=============");
-        for (GiftsDto gift : gifts) {
-            System.out.println(String.format("%-14s%d", gift.getProductName(), gift.getQuantity()));
-        }
-
+    private void printAmountReceipt(List<AmountsDto> amounts) {
         System.out.println("==============================");
         for (AmountsDto amount : amounts) {
             if (amount.getInformation().equals("총구매액")) {
@@ -39,6 +33,21 @@ public class OutputView {
                 continue;
             }
             System.out.println(String.format("%-22s%-,6d", amount.getInformation(), amount.getAmount()));
+        }
+    }
+
+    private void printGiftReceipt(List<GiftsDto> gifts) {
+        System.out.println("===========증	정=============");
+        for (GiftsDto gift : gifts) {
+            System.out.println(String.format("%-14s%d", gift.getProductName(), gift.getQuantity()));
+        }
+    }
+
+    private void printProductReceipt(List<ProductsDto> purchasesContent) {
+        System.out.println("===========W 편의점=============");
+        System.out.println(String.format("%-14s%-8s%-6s", "상품명", "수량", "금액"));
+        for (ProductsDto purchase : purchasesContent) {
+            System.out.println(String.format("%-14s%,-8d%,-6d", purchase.getProductName(), purchase.getQuantity(), purchase.getAmount()));
         }
     }
 }
