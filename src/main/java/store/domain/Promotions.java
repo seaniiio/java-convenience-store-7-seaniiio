@@ -7,6 +7,8 @@ public class Promotions {
 
     private static List<Promotion> promotions = new ArrayList<>();
 
+    private Promotions() {}
+
     public static void createPromotions(List<String> givenPromotions) {
         promotions = new ArrayList<>();
 
