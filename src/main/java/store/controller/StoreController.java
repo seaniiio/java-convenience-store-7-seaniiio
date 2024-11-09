@@ -28,7 +28,6 @@ public class StoreController {
         setStore();
 
         while (true) {
-            this.purchaseService = new PurchaseService();
             this.processPurchase();
             if (!continueUntilNormalInput(this::processContinueInput)) {
                 break;
@@ -41,6 +40,7 @@ public class StoreController {
     }
 
     private void processPurchase() {
+        this.purchaseService = new PurchaseService();
         printStoreInformation();
         processInput();
         purchaseService.supplyPurchases();
