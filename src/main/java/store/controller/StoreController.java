@@ -28,72 +28,72 @@ public class StoreController {
     }
 
     public void run() {
-        List<String> products = Reader.readProducts();
-        List<String> promotions = Reader.readPromotions();
-        storeService.set(products, promotions);
+        setStore();
 
         while (true) {
-            printInformation();
-            processInput();
-            purchaseService.supplyPurchases();
-
-            outputView.printReceipt(purchaseService.getPurchasesContent(), purchaseService.getGiftsContent());
-
-            if (continueUntilNormalInput(this::processContinueInput)) {
-                continue;
+            processPurchase();
+            if (!continueUntilNormalInput(this::processContinueInput)) {
+                break;
             }
-            break;
         }
     }
 
-    private void printInformation() {
+    private void processPurchase() {
+        printStoreInformation();
+        processInput();
+        purchaseService.supplyPurchases();
+        outputView.printReceipt(purchaseService.getPurchasesContent(), purchaseService.getGiftsContent());
+    }
+
+    private void setStore() {
+        List<String> products = Reader.readProducts();
+        List<String> promotions = Reader.readPromotions();
+        storeService.set(products, promotions);
+    }
+
+    private void printStoreInformation() {
         outputView.printWelcomeMessage();
         outputView.printProductsInformation(storeService.getProductsInformation());
     }
 
     private void processInput() {
-        continueUntilNormalInput(this::processPurchaseInput);
-        continueUntilNormalInput(this::processPromotionAddInput);
-        continueUntilNormalInput(this::processPurchaseConfirmInput);
-        continueUntilNormalInput(this::processMembershipConfirmInput);
+        purchaseService.setPurchase(continueUntilNormalInput(this::processPurchaseInput));
+        purchaseService.setPurchasePromotionStatus(continueUntilNormalInput(this::processAddQuantityInput));
+        purchaseService.setPurchaseConfirmation(continueUntilNormalInput(this::processPurchaseConfirmInput));
+        purchaseService.applyMembershipSale(continueUntilNormalInput(this::processMembershipConfirmInput));
     }
 
-    private void processPurchaseInput() {
+    private Map<String, Integer> processPurchaseInput() {
         String purchases = inputView.getProductAndQuantity();
-        Map<String, Integer> purchasesInput = inputFormatter.formatPurchaseInput(purchases);
-        purchaseService.setPurchase(purchasesInput);
+        return inputFormatter.formatPurchaseInput(purchases);
     }
 
-    private void processMembershipConfirmInput() {
-        String confirm = inputView.inputMembershipSale();
-        purchaseService.applyMembershipSale(inputFormatter.formatIntentionInput(confirm));
-    }
-
-    private void processPromotionAddInput() {
-        // 현재 {상품명}은(는) 1개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)
+    private Map<String, Boolean> processAddQuantityInput() {
         Map<String, Boolean> purchasePromotionStatus = purchaseService.getPurchasePromotionStatus();
+
         for (String productName : purchasePromotionStatus.keySet()) {
             String addInput = inputView.inputProductAdd(productName);
-
-            if (inputFormatter.formatIntentionInput(addInput)) {
-                purchasePromotionStatus.replace(productName, true);
-            }
+            purchasePromotionStatus.replace(productName, inputFormatter.formatIntentionInput(addInput));
         }
-        purchaseService.setPurchasePromotionStatus(purchasePromotionStatus);
+
+        return purchasePromotionStatus;
     }
 
-    private void processPurchaseConfirmInput() {
-        // 현재 콜라 4개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)
+    private Map<String, Boolean> processPurchaseConfirmInput() {
         Map<String, Integer> promotionStockStatus = purchaseService.getPromotionStockStatus();
         Map<String, Boolean> purchaseConfirm = new HashMap<>();
+
         for (String productName : promotionStockStatus.keySet()) {
             String confirmInput = inputView.inputPurchaseConfirm(productName, promotionStockStatus.get(productName));
-
-            if (!inputFormatter.formatIntentionInput(confirmInput)) {
-                purchaseConfirm.put(productName, false);
-            }
+            purchaseConfirm.put(productName, inputFormatter.formatIntentionInput(confirmInput));
         }
-        purchaseService.setPurchaseConfirmation(purchaseConfirm);
+
+        return purchaseConfirm;
+    }
+
+    private Boolean processMembershipConfirmInput() {
+        String confirm = inputView.inputMembershipSale();
+        return inputFormatter.formatIntentionInput(confirm);
     }
 
     private Boolean processContinueInput() {
@@ -101,21 +101,10 @@ public class StoreController {
         return inputFormatter.formatIntentionInput(confirm);
     }
 
-    private void continueUntilNormalInput(Runnable processSpecificInput) {
+    private <T> T continueUntilNormalInput(Supplier<T> processInput) {
         while (true) {
             try {
-                processSpecificInput.run();
-                break;
-            } catch (IllegalArgumentException e) {
-                outputView.printMessage(e.getMessage());
-            }
-        }
-    }
-
-    private <T> T continueUntilNormalInput(Supplier<T> processSpecificInput) {
-        while (true) {
-            try {
-                return processSpecificInput.get();
+                return processInput.get();
             } catch (IllegalArgumentException e) {
                 outputView.printMessage(e.getMessage());
             }
