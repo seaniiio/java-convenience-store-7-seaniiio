@@ -3,7 +3,6 @@ package store.controller;
 import static store.util.InputProcessor.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import store.service.PurchaseService;
 import store.service.StoreService;
@@ -37,17 +36,15 @@ public class StoreController {
         }
     }
 
+    private void setStore() {
+        storeService.set(Reader.readProducts(), Reader.readPromotions());
+    }
+
     private void processPurchase() {
         printStoreInformation();
         processInput();
         purchaseService.supplyPurchases();
         outputView.printReceipt(purchaseService.getPurchasesContent(), purchaseService.getGiftsContent());
-    }
-
-    private void setStore() {
-        List<String> products = Reader.readProducts();
-        List<String> promotions = Reader.readPromotions();
-        storeService.set(products, promotions);
     }
 
     private void printStoreInformation() {
