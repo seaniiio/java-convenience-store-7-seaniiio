@@ -7,16 +7,16 @@ import java.util.Map;
 
 public class InputFormatter {
 
-    public Map<String, Integer> formatPurchaseInput(String productAndQuantity) {
+    public static Map<String, Integer> formatPurchaseInput(String productAndQuantity) {
         validatePurchaseInputFormat(productAndQuantity);
         List<String> purchases = Arrays.stream(productAndQuantity.split(","))
                 .map(String::trim)
                 .toList();
-        purchases.forEach(this::validateProductFormat);
+        purchases.forEach(InputFormatter::validateProductFormat);
         return parsePurchase(purchases);
     }
 
-    public boolean formatIntentionInput(String intentionInput) {
+    public static boolean formatIntentionInput(String intentionInput) {
         validateIntentionInputFormat(intentionInput);
         if (intentionInput.equals("Y")) {
             return true;
@@ -24,7 +24,7 @@ public class InputFormatter {
         return false;
     }
 
-    private void validatePurchaseInputFormat(String productAndQuantity) {
+    private static void validatePurchaseInputFormat(String productAndQuantity) {
         try {
             productAndQuantity.split(",");
         } catch (IllegalStateException e) {
@@ -32,7 +32,7 @@ public class InputFormatter {
         }
     }
 
-    private void validateProductFormat(String product) {
+    private static void validateProductFormat(String product) {
         if (!product.startsWith("[") || !product.endsWith("]")) {
             throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
         }
@@ -45,7 +45,7 @@ public class InputFormatter {
         }
     }
 
-    private Map<String, Integer> parsePurchase(List<String> purchases) {
+    private static Map<String, Integer> parsePurchase(List<String> purchases) {
         Map<String, Integer> productAndQuantity = new HashMap<>();
 
         for (String purchase : purchases) {
@@ -56,7 +56,7 @@ public class InputFormatter {
         return productAndQuantity;
     }
 
-    private void validateIntentionInputFormat(String intentionInput) {
+    private static void validateIntentionInputFormat(String intentionInput) {
         if (!(intentionInput.equals("Y") | intentionInput.equals("N"))) {
             throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
         }

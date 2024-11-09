@@ -1,9 +1,10 @@
 package store.controller;
 
+import static store.util.InputProcessor.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 import store.service.PurchaseService;
 import store.service.StoreService;
 import store.util.InputFormatter;
@@ -15,14 +16,12 @@ public class StoreController {
 
     private final InputView inputView;
     private final OutputView outputView;
-    private final InputFormatter inputFormatter;
     private final StoreService storeService;
     private final PurchaseService purchaseService;
 
     public StoreController() {
         this.inputView = new InputView();
         this.outputView = new OutputView();
-        this.inputFormatter = new InputFormatter();
         this.storeService = new StoreService();
         this.purchaseService = new PurchaseService();
     }
@@ -31,7 +30,7 @@ public class StoreController {
         setStore();
 
         while (true) {
-            processPurchase();
+            continueUntilNormalInput(this::processPurchase);
             if (!continueUntilNormalInput(this::processContinueInput)) {
                 break;
             }
@@ -57,57 +56,47 @@ public class StoreController {
     }
 
     private void processInput() {
-        purchaseService.setPurchase(continueUntilNormalInput(this::processPurchaseInput));
-        purchaseService.setPurchasePromotionStatus(continueUntilNormalInput(this::processAddQuantityInput));
-        purchaseService.setPurchaseConfirmation(continueUntilNormalInput(this::processPurchaseConfirmInput));
-        purchaseService.applyMembershipSale(continueUntilNormalInput(this::processMembershipConfirmInput));
+        continueUntilNormalInput(this::processPurchaseInput);
+        continueUntilNormalInput(this::processAddQuantityInput);
+        continueUntilNormalInput(this::processPurchaseConfirmInput);
+        continueUntilNormalInput(this::processMembershipConfirmInput);
     }
 
-    private Map<String, Integer> processPurchaseInput() {
+    private void processPurchaseInput() {
         String purchases = inputView.getProductAndQuantity();
-        return inputFormatter.formatPurchaseInput(purchases);
+        purchaseService.setPurchase(InputFormatter.formatPurchaseInput(purchases));
     }
 
-    private Map<String, Boolean> processAddQuantityInput() {
+    private void processAddQuantityInput() {
         Map<String, Boolean> purchasePromotionStatus = purchaseService.getPurchasePromotionStatus();
 
         for (String productName : purchasePromotionStatus.keySet()) {
             String addInput = inputView.inputProductAdd(productName);
-            purchasePromotionStatus.replace(productName, inputFormatter.formatIntentionInput(addInput));
+            purchasePromotionStatus.replace(productName, InputFormatter.formatIntentionInput(addInput));
         }
 
-        return purchasePromotionStatus;
+        purchaseService.setPurchasePromotionStatus(purchasePromotionStatus);
     }
 
-    private Map<String, Boolean> processPurchaseConfirmInput() {
+    private void processPurchaseConfirmInput() {
         Map<String, Integer> promotionStockStatus = purchaseService.getPromotionStockStatus();
         Map<String, Boolean> purchaseConfirm = new HashMap<>();
 
         for (String productName : promotionStockStatus.keySet()) {
             String confirmInput = inputView.inputPurchaseConfirm(productName, promotionStockStatus.get(productName));
-            purchaseConfirm.put(productName, inputFormatter.formatIntentionInput(confirmInput));
+            purchaseConfirm.put(productName, InputFormatter.formatIntentionInput(confirmInput));
         }
 
-        return purchaseConfirm;
+        purchaseService.setPurchaseConfirmation(purchaseConfirm);
     }
 
-    private Boolean processMembershipConfirmInput() {
+    private void processMembershipConfirmInput() {
         String confirm = inputView.inputMembershipSale();
-        return inputFormatter.formatIntentionInput(confirm);
+        purchaseService.applyMembershipSale(InputFormatter.formatIntentionInput(confirm));
     }
 
     private Boolean processContinueInput() {
         String confirm = inputView.inputPurchaseMore();
-        return inputFormatter.formatIntentionInput(confirm);
-    }
-
-    private <T> T continueUntilNormalInput(Supplier<T> processInput) {
-        while (true) {
-            try {
-                return processInput.get();
-            } catch (IllegalArgumentException e) {
-                outputView.printMessage(e.getMessage());
-            }
-        }
+        return InputFormatter.formatIntentionInput(confirm);
     }
 }
