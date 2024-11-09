@@ -7,7 +7,9 @@ public class Products {
 
     private static List<Product> products = new ArrayList<>();
 
-    public static void createProducts(List<String> givenProducts) {
+    private Products() {}
+
+    public static void setProducts(List<String> givenProducts) {
         for (String givenProduct : givenProducts) {
             String[] productInformation = givenProduct.split(",");
             String productName = productInformation[0];
@@ -39,7 +41,7 @@ public class Products {
 
     }
 
-    public List<String> getProductsInformation() {
+    public static List<String> getProductsInformation() {
         return products.stream()
                 .map(Product::getProductInformation)
                 .toList();
