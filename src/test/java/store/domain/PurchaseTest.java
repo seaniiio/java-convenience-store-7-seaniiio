@@ -25,6 +25,12 @@ class PurchaseTest {
     }
 
     @Test
+    public void 미존재_상품_구매_예외_테스트() {
+        Assertions.assertThatThrownBy(() -> Purchase.createPurchase("논픽션", 3))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     public void 프로모션_혜택_미달_테스트_1() {
         Purchase purchase = Purchase.createPurchase("콜라", 1);
 
@@ -78,5 +84,30 @@ class PurchaseTest {
 
         Assertions.assertThat(purchase.getNotApplyPromotionCounts())
                 .isEqualTo(0);
+    }
+
+    @Test
+    public void 프로모션_미적용_수량_확인_테스트() {
+        Purchase purchase = Purchase.createPurchase("콜라", 14);
+
+        Assertions.assertThat(purchase.getNotApplyPromotionCounts())
+                .isEqualTo(5);
+    }
+
+    @Test
+    public void 프로모션_미적용_가격_확인_테스트() {
+        Purchase purchase = Purchase.createPurchase("콜라", 14);
+
+        Assertions.assertThat(purchase.getNotApplyPromotionAmounts())
+                .isEqualTo(5000);
+    }
+
+    @Test
+    public void 프로모션_사은품_할인_금액_확인_테스트() {
+        Purchase purchase = Purchase.createPurchase("콜라", 14);
+        purchase.applyPurchase();
+
+        Assertions.assertThat(purchase.getGiftAmount())
+                .isEqualTo(3000);
     }
 }
