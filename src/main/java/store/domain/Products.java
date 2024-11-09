@@ -48,14 +48,16 @@ public class Products {
     }
 
     private static void addPromotionInformation(Product product, List<ProductsDto> productsInformation) {
-        if (product.hasPromotionStock()) {
-            productsInformation.add(product.getPromotionInformation());
+        ProductsDto promotionInformation = product.getPromotionInformation();
+        if (promotionInformation != null) {
+            productsInformation.add(promotionInformation);
         }
     }
 
     private static void addNormalInformation(Product product, List<ProductsDto> productsInformation) {
-        if (product.hasNormalStock()) {
-            productsInformation.add(product.getNormalInformation());
+        ProductsDto normalInformation = product.getNormalInformation();
+        if (normalInformation != null) {
+            productsInformation.add(normalInformation);
         }
     }
 }

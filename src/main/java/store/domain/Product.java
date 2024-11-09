@@ -13,20 +13,10 @@ public class Product {
     private int promotionStock = -1;
     private Promotion promotion;
 
-    public Product(String name, int price, int stock, String promotion) {
+    private Product(String name, int price, int stock, String promotion) {
         this.name = name;
         this.price = price;
         classifyNormalOrPromotion(stock, promotion);
-    }
-
-    private void classifyNormalOrPromotion(int stock, String promotion) {
-        if (promotion.equals("null")) {
-            this.normalStock = stock;
-            return;
-        }
-
-        this.promotionStock = stock;
-        this.promotion = Promotions.of(promotion);
     }
 
     public static Product createProduct(String productInformation) {
@@ -42,17 +32,13 @@ public class Product {
         return this.name.equals(name);
     }
 
-    public void addNewStock(String productInformation) { // 새로운 프로모션 / 일반 재고 추가
+    public void addNewStock(String productInformation) {
         List<String> productInformations = new ArrayList<>(Arrays.stream(productInformation.split(",")).toList());
-        // validate 필요
+
         int stock = Integer.parseInt(productInformations.get(2));
         String promotion = productInformations.get(3);
 
         classifyNormalOrPromotion(stock, promotion);
-    }
-
-    private boolean isPromotionApply() {
-        return promotion != null && promotion.isApply();
     }
 
     public boolean isOverPromotionBuyQuantity(int quantity) {
@@ -63,40 +49,27 @@ public class Product {
     }
 
     public boolean canBuy(int quantity) {
-        //프로모션이 적용되는 경우
         if (isPromotionApply()) {
             return quantity <= normalStock + promotionStock;
         }
-        //프로모션이 적용되지 않는 경우
         return quantity <= normalStock;
     }
 
-    // 프로모션 적용되지 않는 물품 개수 return
     public int notApplyPromotionCounts(int quantity) {
-        if (promotion == null) {
+        if (!isPromotionApply()) {
             return 0;
         }
-        int maxPromotionApplyAmount = (promotionStock / promotion.getBuyAndGetQuantity()) * promotion.getBuyAndGetQuantity();
-        if (quantity <= maxPromotionApplyAmount) {
+        int maxPromotionApplyQuantity = (promotionStock / promotion.getBuyAndGetQuantity()) * promotion.getBuyAndGetQuantity();
+        if (quantity <= maxPromotionApplyQuantity) {
             return 0;
         }
-        return quantity - maxPromotionApplyAmount;
+        return quantity - maxPromotionApplyQuantity;
     }
 
-    //수정 필요!!!
     public int purchase(int quantity) {
         //현재 프로모션 적용되는 경우
         if (isPromotionApply()) {
-            int maxGift = (promotionStock / promotion.getBuyAndGetQuantity());
-            //프로모션 재고가 충분한 경우
-            if (promotionStock >= quantity) {
-                promotionStock -= quantity;
-                return quantity / promotion.getBuyAndGetQuantity();
-            }
-            //일반 재고도 필요한 경우
-            normalStock -= (quantity - promotionStock);
-            promotionStock = 0;
-            return maxGift;
+            return purchaseWithPromotion(quantity);
         }
         //프로모션 적용되지 않는 경우
         this.normalStock -= quantity;
@@ -111,8 +84,8 @@ public class Product {
         return quantity * price;
     }
 
-    public boolean isPromotion() {
-        return !(this.promotion == null);
+    public boolean isPromotionApply() {
+        return promotion != null && promotion.isApply();
     }
 
     public int getPromotionQuantity() {
@@ -122,19 +95,40 @@ public class Product {
         return promotion.getPromotionQuantity();
     }
 
-    public boolean hasNormalStock() {
-        return normalStock >= 0;
-    }
-
-    public boolean hasPromotionStock() {
-        return promotionStock >= 0;
-    }
-
     public ProductsDto getNormalInformation() {
-        return new ProductsDto(this.name, this.price, this.normalStock, "");
+        if (normalStock >= 0) {
+            return new ProductsDto(this.name, this.price, this.normalStock, "");
+        }
+        return null;
     }
 
     public ProductsDto getPromotionInformation() {
-        return new ProductsDto(this.name, this.price, this.promotionStock, this.promotion.getName());
+        if (promotionStock >= 0) {
+            return new ProductsDto(this.name, this.price, this.promotionStock, this.promotion.getName());
+        }
+        return null;
+    }
+
+    private int purchaseWithPromotion(int quantity) {
+        int maxGift = (promotionStock / promotion.getBuyAndGetQuantity());
+
+        if (promotionStock >= quantity) {
+            promotionStock -= quantity;
+            return quantity / promotion.getBuyAndGetQuantity();
+        }
+
+        normalStock -= (quantity - promotionStock);
+        promotionStock = 0;
+        return maxGift;
+    }
+
+    private void classifyNormalOrPromotion(int stock, String promotion) {
+        if (promotion.equals("null")) {
+            this.normalStock = stock;
+            return;
+        }
+
+        this.promotionStock = stock;
+        this.promotion = Promotions.of(promotion);
     }
 }

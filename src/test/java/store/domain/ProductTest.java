@@ -18,7 +18,7 @@ class ProductTest {
         List<String> promotions = Reader.readPromotions();
         storeService.set(products, promotions);
 
-        product = new Product("비요뜨", 2100, 5, "반짝할인");
+        product = Product.createProduct("비요뜨,2100,5,반짝할인");
         product.addNewStock("비요뜨,2100,5,null");
     }
 
@@ -36,25 +36,81 @@ class ProductTest {
 
     @Test
     public void 구매_테스트_1() {
-        product.purchase(10);
+        int expectedGifts = 2;
 
-        Assertions.assertThat(product.getProductInformation())
-                .contains("- 비요뜨 2,100원 재고 없음 반짝할인", "- 비요뜨 2,100원 재고 없음");
+        Assertions.assertThat(product.purchase(10))
+                .isEqualTo(expectedGifts);
     }
 
     @Test
     public void 구매_테스트_2() {
-        product.purchase(8);
+        int expectedGifts = 1;
 
-        Assertions.assertThat(product.getProductInformation())
-                .contains("- 비요뜨 2,100원 재고 없음 반짝할인", "- 비요뜨 2,100원 2개");
+        Assertions.assertThat(product.purchase(2))
+                .isEqualTo(expectedGifts);
     }
 
     @Test
     public void 구매_테스트_3() {
-        product.purchase(3);
+        product = Product.createProduct("비요뜨,2100,5,기간지난할인");
+        product.addNewStock("비요뜨,2100,5,null");
 
-        Assertions.assertThat(product.getProductInformation())
-                .contains("- 비요뜨 2,100원 2개 반짝할인", "- 비요뜨 2,100원 5개");
+        int expectedGifts = 0;
+
+        Assertions.assertThat(product.purchase(5))
+                .isEqualTo(expectedGifts);
+    }
+
+    @Test
+    public void 프로모션이_적용되지_않는_물건_수_테스트_1() {
+        int expectedCounts = 1;
+
+        Assertions.assertThat(product.notApplyPromotionCounts(5))
+                .isEqualTo(expectedCounts);
+    }
+
+    @Test
+    public void 프로모션이_적용되지_않는_물건_수_테스트_2() {
+        int expectedCounts = 4;
+
+        Assertions.assertThat(product.notApplyPromotionCounts(8))
+                .isEqualTo(expectedCounts);
+    }
+
+    @Test
+    public void 프로모션_재고_추가_테스트() {
+        product = Product.createProduct("비요뜨,2100,5,null");
+        product.addNewStock("비요뜨,2100,5,반짝할인");
+
+        Assertions.assertThat(product.isPromotionApply())
+                .isEqualTo(true);
+    }
+
+    @Test
+    public void 프로모션_적용_여부_확인_테스트_1() {
+        product = Product.createProduct("비요뜨,2100,5,null");
+
+        Assertions.assertThat(product.isPromotionApply())
+                .isEqualTo(false);
+    }
+
+    @Test
+    public void 프로모션_적용_여부_확인_테스트_2() {
+        product = Product.createProduct("비요뜨,2100,5,기간지난할인");
+
+        Assertions.assertThat(product.isPromotionApply())
+                .isEqualTo(false);
+    }
+
+    @Test
+    public void 구매_금액_확인_테스트() {
+        Assertions.assertThat(product.getAmount(4))
+                .isEqualTo(8400);
+    }
+
+    @Test
+    public void 프로모션_적용_개수_확인_테스트() {
+        Assertions.assertThat(product.getPromotionQuantity())
+                .isEqualTo(2);
     }
 }
