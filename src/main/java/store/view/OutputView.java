@@ -47,29 +47,35 @@ public class OutputView {
         printAmountReceipt(amounts);
     }
 
-    private void printAmountReceipt(List<AmountsDto> amounts) {
-        System.out.println("==============================");
-        for (AmountsDto amount : amounts) {
-            if (amount.getInformation().equals("총구매액")) {
-                System.out.println(String.format("%-14s%-8d%,6d", amount.getInformation(), amount.getQuantity(), amount.getAmount()));
-                continue;
-            }
-            System.out.println(String.format("%-22s%-,6d", amount.getInformation(), amount.getAmount()));
+    private void printProductReceipt(List<PurchasedProductsDto> purchasesContent) {
+        System.out.println("==============W 편의점================");
+        System.out.println(String.format("%-18s%-8s%-6s", "상품명", "수량", "금액"));
+        for (PurchasedProductsDto purchase : purchasesContent) {
+            System.out.println(String.format("%s%,-10d%,-6d", getFormattedMessage(purchase.getProductName(), 21), purchase.getQuantity(), purchase.getAmount()));
         }
     }
 
     private void printGiftReceipt(List<GiftsDto> gifts) {
-        System.out.println("===========증	정=============");
+        System.out.println("=============증      정===============");
         for (GiftsDto gift : gifts) {
-            System.out.println(String.format("%-14s%d", gift.getProductName(), gift.getQuantity()));
+            System.out.println(String.format("%s%d", getFormattedMessage(gift.getProductName(), 21), gift.getQuantity()));
         }
     }
 
-    private void printProductReceipt(List<PurchasedProductsDto> purchasesContent) {
-        System.out.println("===========W 편의점=============");
-        System.out.println(String.format("%-14s%-8s%-6s", "상품명", "수량", "금액"));
-        for (PurchasedProductsDto purchase : purchasesContent) {
-            System.out.println(String.format("%-14s%,-8d%,-6d", purchase.getProductName(), purchase.getQuantity(), purchase.getAmount()));
+    private void printAmountReceipt(List<AmountsDto> amounts) {
+        System.out.println("====================================");
+        for (AmountsDto amount : amounts) {
+            if (amount.getInformation().equals("총구매액")) {
+                System.out.println(String.format("%-17s%-10d%,6d", amount.getInformation(), amount.getQuantity(), amount.getAmount()));
+                continue;
+            }
+            System.out.println(String.format("%s%-,6d", getFormattedMessage(amount.getInformation(), 31), amount.getAmount()));
         }
+    }
+
+    private String getFormattedMessage(String message, int defaultLength) {
+        int newLength = defaultLength - message.length();
+
+        return String.format("%-" + newLength + "s", message);
     }
 }
