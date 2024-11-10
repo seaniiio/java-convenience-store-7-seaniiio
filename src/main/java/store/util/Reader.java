@@ -21,21 +21,23 @@ public class Reader {
 
     private static List<String> readFile(String filePath) {
         List<String> contents = new ArrayList<>();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filePath));
-            while (true) {
-                String line = br.readLine();
-                if (line == null) {
-                    break;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            boolean isFirstLine = true;
+
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
                 }
                 contents.add(line);
             }
 
-            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return contents.subList(1, contents.size());
+        return contents;
     }
 }
