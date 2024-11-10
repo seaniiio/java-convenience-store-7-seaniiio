@@ -26,7 +26,7 @@ public class OutputView {
 
     private void printNormalProduct(ProductsDto product) {
         if (product.getStock() == 0) {
-            System.out.println(String.format("- %s %,d원 0개", product.getProductName(), product.getPrice()));
+            System.out.println(String.format("- %s %,d원 재고 없음", product.getProductName(), product.getPrice()));
             return;
         }
         System.out.println(String.format("- %s %,d원 %,d개", product.getProductName(), product.getPrice(), product.getStock()));
