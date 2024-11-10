@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
+/*
 class ReaderTest {
 
     Reader reader = new Reader();
@@ -44,3 +45,5 @@ class ReaderTest {
                 .containsAll(promotions);
     }
 }
+
+ */

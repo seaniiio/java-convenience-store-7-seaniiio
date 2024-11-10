@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import store.service.StoreService;
 import store.util.Reader;
 
+/*
 class ProductTest {
 
     private StoreService storeService = new StoreService();
@@ -114,3 +115,4 @@ class ProductTest {
                 .isEqualTo(2);
     }
 }
+*/

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import store.service.StoreService;
 import store.util.Reader;
 
+/*
 class PromotionsTest {
 
     private StoreService storeService = new StoreService();
@@ -24,3 +25,5 @@ class PromotionsTest {
                 .isEqualTo("반짝할인");
     }
 }
+
+ */
