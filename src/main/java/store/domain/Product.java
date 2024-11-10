@@ -9,7 +9,7 @@ public class Product {
 
     private final String name;
     private final int price;
-    private int normalStock = -1;
+    private int normalStock = 0;
     private int promotionStock = -1;
     private Promotion promotion;
 
@@ -95,11 +95,12 @@ public class Product {
         return promotion.getPromotionApplyQuantity();
     }
 
+    public boolean isPromotionStockExist() {
+        return promotion != null;
+    }
+
     public ProductsDto getNormalInformation() {
-        if (normalStock >= 0) {
-            return new ProductsDto(this.name, this.price, this.normalStock, "");
-        }
-        return null;
+        return new ProductsDto(this.name, this.price, this.normalStock, "");
     }
 
     public ProductsDto getPromotionInformation() {

@@ -22,8 +22,7 @@ public class Products {
     public static List<ProductsDto> getProductsInformation() {
         List<ProductsDto> productsInformation = new ArrayList<>();
         for (Product product : products) {
-            addPromotionInformation(product, productsInformation);
-            addNormalInformation(product, productsInformation);
+            addInformation(product, productsInformation);
         }
         return productsInformation;
     }
@@ -47,17 +46,14 @@ public class Products {
         products.add(Product.createProduct(givenProduct));
     }
 
-    private static void addPromotionInformation(Product product, List<ProductsDto> productsInformation) {
-        ProductsDto promotionInformation = product.getPromotionInformation();
-        if (promotionInformation != null) {
+    private static void addInformation(Product product, List<ProductsDto> productsInformation) {
+        // 프로모션 재고가 있는 경우 -> 프로모션 + 일반(재고없어도) 추가
+        if (product.isPromotionStockExist()) {
+            ProductsDto promotionInformation = product.getPromotionInformation();
             productsInformation.add(promotionInformation);
         }
-    }
-
-    private static void addNormalInformation(Product product, List<ProductsDto> productsInformation) {
+        // 프로모션 재고가 없는 경우 -> 일반만 추가
         ProductsDto normalInformation = product.getNormalInformation();
-        if (normalInformation != null) {
-            productsInformation.add(normalInformation);
-        }
+        productsInformation.add(normalInformation);
     }
 }
