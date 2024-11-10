@@ -1,18 +1,16 @@
 package store.util;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Reader {
 
-    private static final String PRODUCTS_FILE_PATH = "src/main/resources/products.md";
-    private static final String PROMOTIONS_FILE_PATH = "src/main/resources/promotions.md";
+    private static final String PRODUCTS_FILE_PATH = new File("src/main/resources/products.md").getAbsolutePath();
+    private static final String PROMOTIONS_FILE_PATH = new File("src/main/resources/promotions.md").getAbsolutePath();
 
     public static List<String> readProducts() {
         return readFile(PRODUCTS_FILE_PATH);
@@ -25,7 +23,8 @@ public class Reader {
     private static List<String> readFile(String filePath) {
         List<String> contents = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             boolean isFirstLine = true;
 
