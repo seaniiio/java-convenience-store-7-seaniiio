@@ -23,14 +23,11 @@ public class Reader {
     private static List<String> readFile(String filePath) {
         List<String> contents = new ArrayList<>();
 
-
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
-            boolean isFirstLine = true;
 
             while ((line = br.readLine()) != null) {
-                if (isFirstLine) {
-                    isFirstLine = false;
+                if (contents.isEmpty() && line.startsWith("name")) {
                     continue;
                 }
                 contents.add(line);
