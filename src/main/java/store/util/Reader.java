@@ -9,8 +9,8 @@ import java.util.List;
 
 public class Reader {
 
-    private static final String PRODUCTS_FILE_PATH = new File("src/main/resources/products.md").getAbsolutePath();
-    private static final String PROMOTIONS_FILE_PATH = new File("src/main/resources/promotions.md").getAbsolutePath();
+    private static final String PRODUCTS_FILE_PATH = "src/main/resources/products.md";
+    private static final String PROMOTIONS_FILE_PATH = "src/main/resources/promotions.md";
 
     public static List<String> readProducts() {
         return readFile(PRODUCTS_FILE_PATH);

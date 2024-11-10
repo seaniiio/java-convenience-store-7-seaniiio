@@ -6,13 +6,15 @@ import store.dto.ProductsDto;
 
 public class Products {
 
+    private static final String DELIMITER = ",";
+
     private static List<Product> products = new ArrayList<>();
 
     private Products() {}
 
     public static void setProducts(List<String> givenProducts) {
         for (String givenProduct : givenProducts) {
-            String[] productInformation = givenProduct.split(",");
+            String[] productInformation = givenProduct.split(DELIMITER);
             String productName = productInformation[0];
 
             addStock(givenProduct, productName);

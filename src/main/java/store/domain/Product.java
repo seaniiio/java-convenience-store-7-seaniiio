@@ -7,6 +7,9 @@ import store.dto.ProductsDto;
 
 public class Product {
 
+    private static final String NO_PROMOTION = "null";
+    private static final String PRODUCT_DELIMITER = ",";
+
     private final String name;
     private final int price;
     private int normalStock = 0;
@@ -20,7 +23,7 @@ public class Product {
     }
 
     public static Product createProduct(String productInformation) {
-        List<String> productInformations = new ArrayList<>(Arrays.stream(productInformation.split(",")).toList());
+        List<String> productInformations = new ArrayList<>(Arrays.stream(productInformation.split(PRODUCT_DELIMITER)).toList());
 
         return new Product(productInformations.get(0),
                 Integer.parseInt(productInformations.get(1)),
@@ -124,7 +127,7 @@ public class Product {
     }
 
     private void classifyNormalOrPromotion(int stock, String promotion) {
-        if (promotion.equals("null")) {
+        if (promotion.equals(NO_PROMOTION)) {
             this.normalStock = stock;
             return;
         }

@@ -8,6 +8,8 @@ import java.util.List;
 
 public class Promotion {
 
+    private static final String DELIMITER = ",";
+
     private final String name;
     private final int buyQuantity;
     private final int getQuantity;
@@ -23,7 +25,7 @@ public class Promotion {
     }
 
     public static Promotion createPromotion(String promotionInformation) {
-        List<String> promotionInformations = Arrays.stream(promotionInformation.split(",")).toList();
+        List<String> promotionInformations = Arrays.stream(promotionInformation.split(DELIMITER)).toList();
 
         return new Promotion(promotionInformations.get(0),
                 Integer.parseInt(promotionInformations.get(1)),

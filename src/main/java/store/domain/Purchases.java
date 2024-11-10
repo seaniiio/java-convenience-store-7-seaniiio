@@ -10,6 +10,9 @@ import store.dto.PurchasedProductsDto;
 
 public class Purchases {
 
+    private static final double MEMBERSHIP_DISCOUNT_RATE = 0.3;
+    private static final int MEMBERSHIP_DISCOUNT_MAXIMUM = 8000;
+
     private List<Purchase> purchases;
     private boolean membershipConfirmation = false;
     private int totalQuantity = 0;
@@ -134,7 +137,7 @@ public class Purchases {
                     .mapToInt(Purchase::getNotApplyPromotionAmounts)
                     .sum();
 
-            this.membershipDiscountAmount = Math.min((int) (noPromotionAmounts * 0.3), 8000);
+            this.membershipDiscountAmount = Math.min((int) (noPromotionAmounts * MEMBERSHIP_DISCOUNT_RATE), MEMBERSHIP_DISCOUNT_MAXIMUM);
         }
     }
 
