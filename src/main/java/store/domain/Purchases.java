@@ -72,6 +72,7 @@ public class Purchases {
     }
 
     public void applyPurchases() {
+        calculateMembershipDiscountAmount();
         this.purchases.forEach(Purchase::applyPurchase);
         calculateAmounts();
     }
@@ -109,7 +110,6 @@ public class Purchases {
         calculateTotalQuantity();
         calculateTotalAmount();
         calculatePromotionDiscountAmount();
-        calculateMembershipDiscountAmount();
         calculateTotalPayAmount();
     }
 
@@ -136,7 +136,6 @@ public class Purchases {
             int noPromotionAmounts = purchases.stream()
                     .mapToInt(Purchase::getNotApplyPromotionAmounts)
                     .sum();
-
             this.membershipDiscountAmount = Math.min((int) (noPromotionAmounts * MEMBERSHIP_DISCOUNT_RATE), MEMBERSHIP_DISCOUNT_MAXIMUM);
         }
     }
