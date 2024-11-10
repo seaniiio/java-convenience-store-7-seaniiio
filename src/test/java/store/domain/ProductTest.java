@@ -16,6 +16,7 @@ class ProductTest {
     void set() {
         List<String> products = Reader.readProducts();
         List<String> promotions = Reader.readPromotions();
+        promotions.add("기간지난할인,1,1,2023-11-01,2023-11-30");
         storeService.set(products, promotions);
 
         product = Product.createProduct("비요뜨,2100,5,반짝할인");
@@ -112,5 +113,20 @@ class ProductTest {
     public void 프로모션_적용_개수_확인_테스트() {
         Assertions.assertThat(product.getPromotionQuantity())
                 .isEqualTo(2);
+    }
+
+    @Test
+    public void 프로모션_적용_최소_개수_넘는지_확인_테스트() {
+        Assertions.assertThat(product.isOverPromotionQuantity(2))
+                .isEqualTo(true);
+
+        Assertions.assertThat(product.isOverPromotionQuantity(1))
+                .isEqualTo(false);
+    }
+
+    @Test
+    public void 물품_이름으로_검색_테스트() {
+        Assertions.assertThat(product.equalsTo("비요뜨"))
+                .isEqualTo(true);
     }
 }

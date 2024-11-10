@@ -70,11 +70,9 @@ public class Product {
     }
 
     public int purchase(int quantity) {
-        //현재 프로모션 적용되는 경우
         if (isPromotionApply()) {
             return purchaseWithPromotion(quantity);
         }
-        //프로모션 적용되지 않는 경우
         this.normalStock -= quantity;
         return 0;
     }
@@ -107,10 +105,7 @@ public class Product {
     }
 
     public ProductsDto getPromotionInformation() {
-        if (promotionStock >= 0) {
-            return new ProductsDto(this.name, this.price, this.promotionStock, this.promotion.getName());
-        }
-        return null;
+        return new ProductsDto(this.name, this.price, this.promotionStock, this.promotion.getName());
     }
 
     private int purchaseWithPromotion(int quantity) {
