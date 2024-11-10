@@ -60,7 +60,7 @@ public class StoreController {
     }
 
     private void processPurchaseInput() {
-        String purchases = inputView.getProductAndQuantity();
+        String purchases = inputView.inputPurchases();
         purchaseService.setPurchase(InputFormatter.formatPurchaseInput(purchases));
     }
 
