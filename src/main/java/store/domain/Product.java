@@ -41,7 +41,7 @@ public class Product {
         classifyNormalOrPromotion(stock, promotion);
     }
 
-    public boolean isOverPromotionBuyQuantity(int quantity) {
+    public boolean isOverPromotionQuantity(int quantity) {
         if (isPromotionApply() && promotion.getPromotionApplyQuantity() > quantity) {
             return false;
         }

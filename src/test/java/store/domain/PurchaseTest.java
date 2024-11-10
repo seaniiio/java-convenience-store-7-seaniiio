@@ -34,7 +34,7 @@ class PurchaseTest {
     public void 프로모션_혜택_미달_테스트_1() {
         Purchase purchase = Purchase.createPurchase("콜라", 1);
 
-        Assertions.assertThat(purchase.getPromotionState())
+        Assertions.assertThat(purchase.isUnderPromotionQuantity())
                 .isEqualTo(true);
     }
 
@@ -42,7 +42,7 @@ class PurchaseTest {
     public void 프로모션_혜택_미달_테스트_2() {
         Purchase purchase = Purchase.createPurchase("콜라", 2);
 
-        Assertions.assertThat(purchase.getPromotionState())
+        Assertions.assertThat(purchase.isUnderPromotionQuantity())
                 .isEqualTo(true);
     }
 
@@ -50,7 +50,7 @@ class PurchaseTest {
     public void 프로모션_혜택_달성_테스트() {
         Purchase purchase = Purchase.createPurchase("콜라", 3);
 
-        Assertions.assertThat(purchase.getPromotionState())
+        Assertions.assertThat(purchase.isUnderPromotionQuantity())
                 .isEqualTo(false);
     }
 

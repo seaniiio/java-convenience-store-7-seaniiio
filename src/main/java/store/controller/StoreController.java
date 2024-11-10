@@ -65,26 +65,26 @@ public class StoreController {
     }
 
     private void processAddQuantityInput() {
-        Map<String, Boolean> purchasePromotionStatus = purchaseService.getPurchasePromotionStatus();
+        Map<String, Boolean> underPurchasedProducts = purchaseService.getUnderPurchasedProducts();
 
-        for (String productName : purchasePromotionStatus.keySet()) {
+        for (String productName : underPurchasedProducts.keySet()) {
             String addInput = inputView.inputProductAdd(productName);
-            purchasePromotionStatus.replace(productName, InputFormatter.formatIntentionInput(addInput));
+            underPurchasedProducts.replace(productName, InputFormatter.formatIntentionInput(addInput));
         }
 
-        purchaseService.setPurchasePromotionStatus(purchasePromotionStatus);
+        purchaseService.addPurchaseQuantity(underPurchasedProducts);
     }
 
     private void processPurchaseConfirmInput() {
-        Map<String, Integer> promotionStockStatus = purchaseService.getPromotionStockStatus();
-        Map<String, Boolean> purchaseConfirm = new HashMap<>();
+        Map<String, Integer> notAppliedPromotionProducts = purchaseService.getNotAppliedPromotionProducts();
+        Map<String, Boolean> purchaseConfirmedProducts = new HashMap<>();
 
-        for (String productName : promotionStockStatus.keySet()) {
-            String confirmInput = inputView.inputPurchaseConfirm(productName, promotionStockStatus.get(productName));
-            purchaseConfirm.put(productName, InputFormatter.formatIntentionInput(confirmInput));
+        for (String productName : notAppliedPromotionProducts.keySet()) {
+            String confirmInput = inputView.inputPurchaseConfirm(productName, notAppliedPromotionProducts.get(productName));
+            purchaseConfirmedProducts.put(productName, InputFormatter.formatIntentionInput(confirmInput));
         }
 
-        purchaseService.setPurchaseConfirmation(purchaseConfirm);
+        purchaseService.setPurchaseConfirmation(purchaseConfirmedProducts);
     }
 
     private void processMembershipConfirmInput() {

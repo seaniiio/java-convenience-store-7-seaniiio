@@ -19,16 +19,16 @@ public class PurchaseService {
         purchases.applyPurchases();
     }
 
-    public Map<String, Boolean> getPurchasePromotionStatus() {
-        return purchases.getPurchasePromotionStatus();
+    public Map<String, Boolean> getUnderPurchasedProducts() {
+        return purchases.getUnderPurchasedProducts();
     }
 
-    public void setPurchasePromotionStatus(Map<String, Boolean> status) {
-        purchases.setPurchasePromotionStatus(status);
+    public void addPurchaseQuantity(Map<String, Boolean> products) {
+        purchases.addPurchaseQuantity(products);
     }
 
-    public Map<String, Integer> getPromotionStockStatus() {
-        return purchases.getPromotionStockStatus();
+    public Map<String, Integer> getNotAppliedPromotionProducts() {
+        return purchases.getNotAppliedPromotionProducts();
     }
 
     public void setPurchaseConfirmation(Map<String, Boolean> status) {
@@ -40,7 +40,7 @@ public class PurchaseService {
     }
 
     public List<PurchasedProductsDto> getPurchasesContent() {
-        return purchases.purchasesContent();
+        return purchases.getPurchasesContent();
     }
 
     public List<GiftsDto> getGifts() {

@@ -25,16 +25,10 @@ public class Purchases {
         }
     }
 
-    public void applyPurchases() {
-        this.purchases.forEach(Purchase::applyPurchase);
-        calculateAmounts();
-    }
-
-    public Map<String, Boolean> getPurchasePromotionStatus() {
+    public Map<String, Boolean> getUnderPurchasedProducts() {
         Map<String, Boolean> status = new HashMap<>();
         for (Purchase purchase : purchases) {
-            // 프로모션이 적용되는데, 프로모션의 조건보다 적게 구입할 경우만 put
-            if (purchase.getPromotionState()) {
+            if (purchase.isUnderPromotionQuantity()) {
                 status.put(purchase.getProductName(), false);
             }
         }
@@ -42,17 +36,16 @@ public class Purchases {
         return status;
     }
 
-    public void setPurchasePromotionStatus(Map<String, Boolean> status) {
-        // true인 값들에 대해 구매 quantity 추가
+    public void addPurchaseQuantity(Map<String, Boolean> status) {
         for (String productName : status.keySet()) {
             if (status.get(productName)) {
-                Purchase purchase = from(productName);
+                Purchase purchase = getPurchase(productName);
                 purchase.addQuantityForPromotion();
             }
         }
     }
 
-    public Map<String, Integer> getPromotionStockStatus() {
+    public Map<String, Integer> getNotAppliedPromotionProducts() {
         Map<String, Integer> status = new HashMap<>();
         for (Purchase purchase : purchases) {
             int notApplyPromotionCounts = purchase.getNotApplyPromotionCounts();
@@ -66,13 +59,21 @@ public class Purchases {
     public void setPurchaseConfirmation(Map<String, Boolean> confirm) {
         for (String productName : confirm.keySet()) {
             if (!confirm.get(productName)) {
-                //정가로 결제해야하는 수량만큼 제외한 후 결제를 진행
-                from(productName).cancel();
+                getPurchase(productName).subtractNotApplyQuantity();
             }
         }
     }
 
-    public List<PurchasedProductsDto> purchasesContent() {
+    public void applyMembershipSale(boolean confirm) {
+        this.membershipConfirmation = confirm;
+    }
+
+    public void applyPurchases() {
+        this.purchases.forEach(Purchase::applyPurchase);
+        calculateAmounts();
+    }
+
+    public List<PurchasedProductsDto> getPurchasesContent() {
         List<PurchasedProductsDto> receipts = new ArrayList<>();
         for (Purchase purchase : purchases) {
             receipts.add(new PurchasedProductsDto(purchase.getProductName(), purchase.getPurchasedQuantity(), purchase.getAmount()));
@@ -88,10 +89,6 @@ public class Purchases {
             }
         }
         return gifts;
-    }
-
-    public void applyMembershipSale(boolean confirm) {
-        this.membershipConfirmation = confirm;
     }
 
     public List<AmountsDto> getAmounts() {
@@ -149,7 +146,7 @@ public class Purchases {
         totalPayAmount -= (this.promotionDiscountAmount + this.membershipDiscountAmount);
     }
 
-    private Purchase from(String productName) {
+    private Purchase getPurchase(String productName) {
         for (Purchase purchase : purchases) {
             if (purchase.equalName(productName)) {
                 return purchase;

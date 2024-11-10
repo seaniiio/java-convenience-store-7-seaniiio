@@ -17,9 +17,9 @@ public class Purchase {
         return new Purchase(Products.getProduct(productName), quantity);
     }
 
-    public boolean getPromotionState() {
+    public boolean isUnderPromotionQuantity() {
         // 프로모션이 적용되는데, 프로모션보다 적게 구입할 경우에 true
-        return !product.isOverPromotionBuyQuantity(this.quantity);
+        return !product.isOverPromotionQuantity(this.quantity);
     }
 
     public void addQuantityForPromotion() {
@@ -47,7 +47,7 @@ public class Purchase {
         return product.getAmount(quantity);
     }
 
-    public void cancel() {
+    public void subtractNotApplyQuantity() {
         this.quantity -= getNotApplyPromotionCounts();
     }
 
