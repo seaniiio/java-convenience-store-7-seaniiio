@@ -16,13 +16,29 @@ public class OutputView {
         System.out.println("현재 보유하고 있는 상품입니다." + System.lineSeparator());
 
         for (ProductsDto product : products) {
-            if (product.getStock() == 0) {
-                System.out.println(String.format("- %s %,d원 재고 없음 %s", product.getProductName(), product.getPrice(),
-                        product.getPromotionName()));
+            if (product.getPromotionName().isBlank()) {
+                printNormalProduct(product);
                 continue;
             }
-            System.out.println(String.format("- %s %,d원 %,d개 %s", product.getProductName(), product.getPrice(), product.getStock(), product.getPromotionName()));
+            printPromotionProduct(product);
         }
+    }
+
+    private void printNormalProduct(ProductsDto product) {
+        if (product.getStock() == 0) {
+            System.out.println(String.format("- %s %,d원 재고 없음", product.getProductName(), product.getPrice()));
+            return;
+        }
+        System.out.println(String.format("- %s %,d원 %,d개", product.getProductName(), product.getPrice(), product.getStock()));
+    }
+
+    private void printPromotionProduct(ProductsDto product) {
+        if (product.getStock() == 0) {
+            System.out.println(String.format("- %s %,d원 재고 없음 %s", product.getProductName(), product.getPrice(),
+                    product.getPromotionName()));
+            return;
+        }
+        System.out.println(String.format("- %s %,d원 %,d개 %s", product.getProductName(), product.getPrice(), product.getStock(), product.getPromotionName()));
     }
 
     public void printReceipt(List<PurchasedProductsDto> purchasesContent, List<GiftsDto> gifts, List<AmountsDto> amounts) {
