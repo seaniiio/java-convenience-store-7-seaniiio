@@ -49,7 +49,7 @@ public class InputFormatter {
         try {
             String[] productAndQuantity = product.substring(1, product.length() - 1).split(QUANTITY_DELIMITER);
             Integer.parseInt(productAndQuantity[1]);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
             throw new IllegalArgumentException(ErrorMessage.PURCHASE_INPUT_FORMAT_ERROR.getMessage());
         }
     }
@@ -59,10 +59,17 @@ public class InputFormatter {
 
         for (String purchase : purchases) {
             String[] purchaseOne = purchase.substring(1, purchase.length() - 1).split(QUANTITY_DELIMITER);
+            validateDuplicatedPurchaseExist(productAndQuantity, purchaseOne);
             productAndQuantity.put(purchaseOne[0], Integer.parseInt(purchaseOne[1]));
         }
 
         return productAndQuantity;
+    }
+
+    private static void validateDuplicatedPurchaseExist(Map<String, Integer> productAndQuantity, String[] purchaseOne) {
+        if (productAndQuantity.get(purchaseOne[0]) != null) {
+            throw new IllegalArgumentException(ErrorMessage.INPUT_OTHER_ERROR.getMessage());
+        }
     }
 
     private static void validateIntentionInputFormat(String intentionInput) {
