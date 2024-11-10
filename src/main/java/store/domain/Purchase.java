@@ -37,14 +37,16 @@ public class Purchase {
     }
 
     public int getNotApplyPromotionCounts() {
-        // 프로모션이 적용되지 않는 물품 수 return
+        // 재고가 없어서 프로모션이 적용되지 않는 물품 수 return
         return product.notApplyPromotionCounts(quantity);
     }
 
     public int getNotApplyPromotionAmounts() {
-        //프로모션이 적용되지 않는 가격 return
+        // 재고가 없거나 조건보다 덜 구매해서 프로모션이 적용되지 않는 가격 return
         if (product.isPromotionApply()) {
-            return product.getAmount(getNotApplyPromotionCounts());
+            if (product.isOverPromotionQuantity(quantity)) {
+                return product.getAmount(getNotApplyPromotionCounts());
+            }
         }
         return product.getAmount(quantity);
     }
