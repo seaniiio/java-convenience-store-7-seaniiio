@@ -80,7 +80,7 @@ public class Purchase {
 
         Product product = Products.getProduct(productName);
         if (!product.canBuy(quantity)) {
-            throw new IllegalArgumentException(ErrorMessage.PRODUCT_NOT_EXIST_ERROR.getMessage());
+            throw new IllegalArgumentException(ErrorMessage.OUT_OF_STOCK_ERROR.getMessage());
         }
     }
 }
