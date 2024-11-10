@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import store.constant.ErrorMessage;
 
 public class InputFormatter {
 
@@ -28,20 +29,20 @@ public class InputFormatter {
         try {
             productAndQuantity.split(",");
         } catch (IllegalStateException e) {
-            throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(ErrorMessage.PURCHASE_INPUT_FORMAT_ERROR.getMessage());
         }
     }
 
     private static void validateProductFormat(String product) {
         if (!product.startsWith("[") || !product.endsWith("]")) {
-            throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(ErrorMessage.PURCHASE_INPUT_FORMAT_ERROR.getMessage());
         }
 
         try {
             String[] productAndQuantity = product.substring(1, product.length() - 1).split("-");
             Integer.parseInt(productAndQuantity[1]);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(ErrorMessage.PURCHASE_INPUT_FORMAT_ERROR.getMessage());
         }
     }
 
@@ -58,7 +59,7 @@ public class InputFormatter {
 
     private static void validateIntentionInputFormat(String intentionInput) {
         if (!(intentionInput.equals("Y") | intentionInput.equals("N"))) {
-            throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(ErrorMessage.INPUT_OTHER_ERROR.getMessage());
         }
     }
 }
