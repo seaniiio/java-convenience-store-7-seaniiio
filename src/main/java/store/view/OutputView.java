@@ -65,12 +65,18 @@ public class OutputView {
     private void printAmountReceipt(List<AmountsDto> amounts) {
         System.out.println("====================================");
         for (AmountsDto amount : amounts) {
-            if (amount.getInformation().equals("총구매액")) {
-                System.out.println(String.format("%-17s%-10d%,6d", amount.getInformation(), amount.getQuantity(), amount.getAmount()));
-                continue;
-            }
-            System.out.println(String.format("%s%-,6d", getFormattedMessage(amount.getInformation(), 31), amount.getAmount()));
+            System.out.println(getAmountMessage(amount));
         }
+    }
+
+    private String getAmountMessage(AmountsDto amount) {
+        if (amount.getInformation().equals("총구매액")) {
+            return String.format("%-17s%-10d%,6d", amount.getInformation(), amount.getQuantity(), amount.getAmount());
+        }
+        if (amount.getAmount() != 0) {
+            return String.format("%s%-,6d", getFormattedMessage(amount.getInformation(), 32), amount.getAmount());
+        }
+        return String.format("%s-%-,6d", getFormattedMessage(amount.getInformation(), 32), amount.getAmount());
     }
 
     private String getFormattedMessage(String message, int defaultLength) {
