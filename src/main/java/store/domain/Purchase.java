@@ -58,11 +58,9 @@ public class Purchase {
         // 재고가 없거나 조건보다 덜 구매해서 프로모션이 적용되지 않는 가격 return
         if (product.isPromotionApply()) {
             if (product.isOverPromotionQuantity(quantity)) {
-                System.out.println(product.getAmount(getNotApplyPromotionCounts()));
                 return product.getAmount(getNotApplyPromotionCounts());
             }
         }
-        System.out.println(product.getAmount(quantity));
         return product.getAmount(quantity);
     }
 
