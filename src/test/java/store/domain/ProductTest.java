@@ -115,14 +115,14 @@ class ProductTest {
                 .isEqualTo(2);
     }
 
-//    @Test
-//    public void 프로모션_적용_최소_개수_넘는지_확인_테스트() {
-//        Assertions.assertThat(product.isOverPromotionQuantity(2))
-//                .isEqualTo(true);
-//
-//        Assertions.assertThat(product.isOverPromotionQuantity(1))
-//                .isEqualTo(false);
-//    }
+    @Test
+    public void 프로모션_적용_최소_개수_넘는지_확인_테스트() {
+        Assertions.assertThat(product.isOverPromotionQuantity(2))
+                .isEqualTo(true);
+
+        Assertions.assertThat(product.isOverPromotionQuantity(1))
+                .isEqualTo(false);
+    }
 
     @Test
     public void 물품_이름으로_검색_테스트() {
