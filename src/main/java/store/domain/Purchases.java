@@ -80,7 +80,9 @@ public class Purchases {
     public List<PurchasedProductsDto> getPurchasesContent() {
         List<PurchasedProductsDto> receipts = new ArrayList<>();
         for (Purchase purchase : purchases) {
-            receipts.add(new PurchasedProductsDto(purchase.getProductName(), purchase.getPurchasedQuantity(), purchase.getAmount()));
+            if (purchase.getAmount() != 0) {
+                receipts.add(new PurchasedProductsDto(purchase.getProductName(), purchase.getPurchasedQuantity(), purchase.getAmount()));
+            }
         }
         return receipts;
     }
