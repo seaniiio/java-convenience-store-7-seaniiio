@@ -21,11 +21,18 @@ public class Purchase {
 
     public boolean isUnderPromotionQuantity() {
         // 프로모션이 적용되는데, 프로모션보다 적게 구입할 경우에 true
-        return !product.isOverPromotionQuantity(this.quantity);
+        // 구매량이 프로모션 양에 나누어 떨이지지 않으면서, 추가해도 재고가 충분한 경우
+        if (product.isPromotionApply()
+                && this.quantity % product.getPromotionQuantity() != 0
+                && (this.quantity / product.getPromotionQuantity() + 1) * product.getPromotionQuantity() <= product.getPromotionStock()) {
+            return true;
+        }
+        return false;
     }
 
     public void addQuantityForPromotion() {
-        this.quantity = product.getPromotionQuantity();
+        int newQuantity = (this.quantity / product.getPromotionQuantity() + 1) * product.getPromotionQuantity();
+        this.quantity = newQuantity;
     }
 
     public boolean equalName(String productName) {

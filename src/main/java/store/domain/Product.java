@@ -108,6 +108,10 @@ public class Product {
         return new ProductsDto(this.name, this.price, this.promotionStock, this.promotion.getName());
     }
 
+    public int getPromotionStock() {
+        return this.promotionStock;
+    }
+
     private int purchaseWithPromotion(int quantity) {
         int maxGift = (promotionStock / promotion.getPromotionApplyQuantity());
 
