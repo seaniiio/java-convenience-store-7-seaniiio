@@ -60,7 +60,9 @@ class PurchaseTest {
             "탄산수, 5, 2",
             "감자칩, 6, 2",
             "감자칩, 2, 0",
+            "감자칩, 1, 1",
             "콜라, 14, 5",
+            "오렌지주스, 3, 1"
     })
     public void 프로모션_할인_미적용_수량_테스트(String productName, int quantity, int expected) {
         Purchase purchase = Purchase.createPurchase(productName, quantity);

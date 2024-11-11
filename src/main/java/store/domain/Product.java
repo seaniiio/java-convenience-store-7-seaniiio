@@ -58,13 +58,24 @@ public class Product {
         return quantity <= normalStock;
     }
 
-    public int notApplyPromotionCounts(int quantity) {
+    public int notApplyPromotionOutOfStockCounts(int quantity) {
         if (!isPromotionApply()) {
             return 0;
         }
         int maxPromotionApplyQuantity = (promotionStock / promotion.getPromotionApplyQuantity()) * promotion.getPromotionApplyQuantity();
         if (quantity <= maxPromotionApplyQuantity) {
             return 0;
+        }
+        return quantity - maxPromotionApplyQuantity;
+    }
+
+    public int notApplyPromotionCounts(int quantity) {
+        if (!isPromotionApply()) {
+            return 0;
+        }
+        int maxPromotionApplyQuantity = (promotionStock / promotion.getPromotionApplyQuantity()) * promotion.getPromotionApplyQuantity();
+        if (quantity <= maxPromotionApplyQuantity) {
+            return quantity % promotion.getPromotionApplyQuantity();
         }
         return quantity - maxPromotionApplyQuantity;
     }

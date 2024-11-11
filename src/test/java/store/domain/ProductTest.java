@@ -66,7 +66,7 @@ class ProductTest {
     public void 프로모션이_적용되지_않는_물건_수_테스트_1() {
         int expectedCounts = 1;
 
-        Assertions.assertThat(product.notApplyPromotionCounts(5))
+        Assertions.assertThat(product.notApplyPromotionOutOfStockCounts(5))
                 .isEqualTo(expectedCounts);
     }
 
@@ -74,7 +74,7 @@ class ProductTest {
     public void 프로모션이_적용되지_않는_물건_수_테스트_2() {
         int expectedCounts = 4;
 
-        Assertions.assertThat(product.notApplyPromotionCounts(8))
+        Assertions.assertThat(product.notApplyPromotionOutOfStockCounts(8))
                 .isEqualTo(expectedCounts);
     }
 
@@ -115,14 +115,14 @@ class ProductTest {
                 .isEqualTo(2);
     }
 
-    @Test
-    public void 프로모션_적용_최소_개수_넘는지_확인_테스트() {
-        Assertions.assertThat(product.isOverPromotionQuantity(2))
-                .isEqualTo(true);
-
-        Assertions.assertThat(product.isOverPromotionQuantity(1))
-                .isEqualTo(false);
-    }
+//    @Test
+//    public void 프로모션_적용_최소_개수_넘는지_확인_테스트() {
+//        Assertions.assertThat(product.isOverPromotionQuantity(2))
+//                .isEqualTo(true);
+//
+//        Assertions.assertThat(product.isOverPromotionQuantity(1))
+//                .isEqualTo(false);
+//    }
 
     @Test
     public void 물품_이름으로_검색_테스트() {

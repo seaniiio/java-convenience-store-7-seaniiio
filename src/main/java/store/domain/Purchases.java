@@ -51,7 +51,7 @@ public class Purchases {
     public Map<String, Integer> getNotAppliedPromotionProducts() {
         Map<String, Integer> status = new HashMap<>();
         for (Purchase purchase : purchases) {
-            int notApplyPromotionCounts = purchase.getNotApplyPromotionCounts();
+            int notApplyPromotionCounts = purchase.getNotApplyPromotionOutOfStockCounts();
             if (notApplyPromotionCounts != 0) {
                 status.put(purchase.getProductName(), notApplyPromotionCounts);
             }
