@@ -71,12 +71,13 @@ public class OutputView {
 
     private String getAmountMessage(AmountsDto amount) {
         if (amount.getInformation().equals("총구매액")) {
-            return String.format("%-17s%-10d%,6d", amount.getInformation(), amount.getQuantity(), amount.getAmount());
+            return String.format("%s%,-10d%,-6d", getFormattedMessage("총구매액", 21), amount.getQuantity(),
+                    amount.getAmount());
         }
         if (amount.getAmount() != 0) {
-            return String.format("%s%-,6d", getFormattedMessage(amount.getInformation(), 32), amount.getAmount());
+            return String.format("%s%-,6d", getFormattedMessage(amount.getInformation(), 31), amount.getAmount());
         }
-        return String.format("%s-%-,6d", getFormattedMessage(amount.getInformation(), 32), amount.getAmount());
+        return String.format("%s-%-,6d", getFormattedMessage(amount.getInformation(), 31), amount.getAmount());
     }
 
     private String getFormattedMessage(String message, int defaultLength) {
