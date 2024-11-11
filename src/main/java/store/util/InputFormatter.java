@@ -60,6 +60,7 @@ public class InputFormatter {
         for (String purchase : purchases) {
             String[] purchaseOne = purchase.substring(1, purchase.length() - 1).split(QUANTITY_DELIMITER);
             validateDuplicatedPurchaseExist(productAndQuantity, purchaseOne);
+            validateQuantityPositive(purchaseOne[1]);
             productAndQuantity.put(purchaseOne[0], Integer.parseInt(purchaseOne[1]));
         }
 
@@ -69,6 +70,12 @@ public class InputFormatter {
     private static void validateDuplicatedPurchaseExist(Map<String, Integer> productAndQuantity, String[] purchaseOne) {
         if (productAndQuantity.get(purchaseOne[0]) != null) {
             throw new IllegalArgumentException(ErrorMessage.INPUT_OTHER_ERROR.getMessage());
+        }
+    }
+
+    private static void validateQuantityPositive(String s) {
+        if (Integer.parseInt(s) <= 0) {
+            throw new IllegalArgumentException(ErrorMessage.PURCHASE_INPUT_FORMAT_ERROR.getMessage());
         }
     }
 
