@@ -58,6 +58,9 @@ public class Product {
     }
 
     public int getUnderPromotion(Integer buyQuantity) {
+        if (promotion == null) {
+            return 0;
+        }
         if (!promotion.isApply()) { // 프로모션 적용 안되면 X
             return 0;
         }
@@ -77,11 +80,38 @@ public class Product {
     }
 
     public int getPromotionNotApplyQuantity(int buyQuantity) {
+        if (promotion == null) {
+            return 0;
+        }
         int applyQuantity = (promotionStock / (promotion.getCondition())) * promotion.getCondition();
         if (applyQuantity >= buyQuantity) {
             return 0;
         }
         return buyQuantity - applyQuantity;
+    }
+
+    public int getMembershipApplyAmount(int quantity) {
+        // 프로모션 적용되지 않은 값
+        if (!isPromotionApply()) {
+            return quantity * price;
+        }
+
+        if (getPromotionNotApplyQuantity(quantity) >= 0) {
+            return getPromotionNotApplyQuantity(quantity) * price;
+        }
+
+        return (quantity % promotion.getCondition()) * price;
+    }
+
+    public Integer getGifts(Integer buyQuantity) {
+        if (promotion == null) {
+            return 0;
+        }
+        int applyQuantity = (promotionStock / (promotion.getCondition())) * promotion.getCondition();
+        if (applyQuantity >= buyQuantity) {
+            return buyQuantity / promotion.getCondition();
+        }
+        return applyQuantity;
     }
 
     public String getName() {
@@ -110,5 +140,9 @@ public class Product {
 
     public int getGetQuantity() {
         return this.promotion.getGetQuantity();
+    }
+
+    public Integer getBuyPrice(Integer quantity) {
+        return price * quantity;
     }
 }

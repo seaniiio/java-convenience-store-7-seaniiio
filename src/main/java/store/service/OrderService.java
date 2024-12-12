@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import store.constant.Command;
 import store.constant.ErrorMessage;
 import store.domain.Product;
 import store.dto.LackBuyQuantityProduct;
 import store.dto.LackPromotionStockProduct;
+import store.dto.Receipt;
 import store.repository.OrderRepository;
 import store.repository.StoreRepository;
 import store.util.Parser;
@@ -92,5 +94,29 @@ public class OrderService {
                 }
             }
         }
+    }
+
+    public Receipt buy(Command isMembershipApply) {
+        Map<Product, Integer> orders = orderRepository.getOrders();
+        Map<String, List<Integer>> buyProducts = new HashMap<>();
+        Map<String, Integer> gifts = new HashMap<>();
+
+        int totalAmount = 0;
+        int promotionDiscount = 0;
+        int membershipDiscount = 0;
+        int promotionNotApplyAmount= 0;
+        for (Product product : orders.keySet()) {
+            buyProducts.put(product.getName(), List.of(orders.get(product), product.getBuyPrice(orders.get(product))));
+            gifts.put(product.getName(), product.getGifts(orders.get(product)));
+            totalAmount += product.getBuyPrice(orders.get(product));
+            promotionDiscount += product.getBuyPrice(product.getGifts(orders.get(product)));
+            promotionNotApplyAmount += product.getMembershipApplyAmount(orders.get(product));
+        }
+
+        if (isMembershipApply.equals(Command.YES)) {
+            membershipDiscount = (int) (promotionNotApplyAmount * 0.3);
+        }
+
+        return new Receipt(buyProducts, gifts, totalAmount, promotionDiscount, membershipDiscount);
     }
 }
