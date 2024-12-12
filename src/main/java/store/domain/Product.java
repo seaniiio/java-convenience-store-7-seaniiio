@@ -114,6 +114,20 @@ public class Product {
         return applyQuantity;
     }
 
+    public void buy(int quantity) {
+        if (promotion.isApply()) {
+            if (promotionStock >= quantity) {
+                promotionStock -= quantity;
+                return;
+            }
+            normalStock -= (quantity - promotionStock);
+            promotionStock = 0;
+            return;
+        }
+
+        normalStock -= quantity;
+    }
+
     public String getName() {
         return name;
     }

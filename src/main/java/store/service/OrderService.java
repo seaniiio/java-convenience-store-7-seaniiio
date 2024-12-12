@@ -107,6 +107,7 @@ public class OrderService {
         int promotionNotApplyAmount= 0;
         for (Product product : orders.keySet()) {
             buyProducts.put(product.getName(), List.of(orders.get(product), product.getBuyPrice(orders.get(product))));
+            product.buy(orders.get(product));
             gifts.put(product.getName(), product.getGifts(orders.get(product)));
             totalAmount += product.getBuyPrice(orders.get(product));
             promotionDiscount += product.getBuyPrice(product.getGifts(orders.get(product)));
