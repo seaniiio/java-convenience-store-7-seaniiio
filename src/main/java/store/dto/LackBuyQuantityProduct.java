@@ -1,13 +1,13 @@
 package store.dto;
 
-public class PromotionNotAppliedProduct {
+public class LackBuyQuantityProduct {
 
     private final String name;
     private final int lackQuantity;
     private final int get;
     private boolean addPurchase;
 
-    public PromotionNotAppliedProduct(String name, int lackQuantity, int get) {
+    public LackBuyQuantityProduct(String name, int lackQuantity, int get) {
         this.name = name;
         this.lackQuantity = lackQuantity;
         this.get = get;

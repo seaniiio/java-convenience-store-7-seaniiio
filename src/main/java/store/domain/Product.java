@@ -76,6 +76,14 @@ public class Product {
         return promotion != null && promotion.isApply();
     }
 
+    public int getPromotionNotApplyQuantity(int buyQuantity) {
+        int applyQuantity = (promotionStock / (promotion.getCondition())) * promotion.getCondition();
+        if (applyQuantity >= buyQuantity) {
+            return 0;
+        }
+        return buyQuantity - applyQuantity;
+    }
+
     public String getName() {
         return name;
     }

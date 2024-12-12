@@ -2,8 +2,8 @@ package store.controller;
 
 import java.util.List;
 import store.constant.Command;
-import store.domain.Product;
-import store.dto.PromotionNotAppliedProduct;
+import store.dto.LackBuyQuantityProduct;
+import store.dto.LackPromotionStockProduct;
 import store.service.OrderService;
 import store.service.StoreService;
 import store.util.InputProcessor;
@@ -38,23 +38,40 @@ public class StoreController {
         // 프로모션 - 조건 부족한지 확인(추가할건지)
         processLackCondition();
         // 프로모션 - 재고 부족한지 확인(그냥 구매할건지)
+        processLackPromotionStock();
 //        orderService.buy();
     }
 
     private void processLackCondition() {
-        List<PromotionNotAppliedProduct> products = orderService.checkPromotion();
-        for (PromotionNotAppliedProduct product : products) {
+        List<LackBuyQuantityProduct> products = orderService.checkPromotionCondition();
+        for (LackBuyQuantityProduct product : products) {
             InputProcessor.continueUntilNormalInput(this::processAddBuyQuantity, outputView::printErrorMessage, product);
         }
 
         orderService.addBuyQuantity(products);
     }
 
-    private void processAddBuyQuantity(PromotionNotAppliedProduct product) {
-        String input = inputView.printAddBuyCommand(product);
+    private void processLackPromotionStock() {
+        List<LackPromotionStockProduct> products = orderService.checkPromotionStock();
+        for (LackPromotionStockProduct product : products) {
+            InputProcessor.continueUntilNormalInput(this::processBuyConfirm, outputView::printErrorMessage, product);
+        }
+        orderService.setBuyConfirm(products);
+    }
+
+    private void processAddBuyQuantity(LackBuyQuantityProduct product) {
+        String input = inputView.addBuyInput(product);
         Command command = Command.findCommand(input);
         if (command.equals(Command.YES)) {
             product.setPurchase();
+        }
+    }
+
+    private void processBuyConfirm(LackPromotionStockProduct product) {
+        String input = inputView.buyConfirmInput(product);
+        Command command = Command.findCommand(input);
+        if (command.equals(Command.YES)) {
+            product.confirmToBuy();
         }
     }
 }
