@@ -7,7 +7,6 @@ public class Product {
     private static final int NAME_INDEX = 0;
     private static final int PRICE_INDEX = 1;
     private static final int QUANTITY_INDEX = 2;
-    private static final int PROMOTION_INDEX = 3;
 
     private final String name;
     private final int price;
@@ -33,14 +32,6 @@ public class Product {
         return new Product(name, price, promotion, 0, quantity);
     }
 
-//    public static Product getNullProduct() {
-//        return new Product("null", 0, Promotion.getNullPromotion(), 0, 0);
-//    }
-//
-//    public boolean isNullProduct() {
-//        return this.name.equals("null");
-//    }
-
     public boolean isNameEqualsTo(String name) {
         return this.name.equals(name);
     }
@@ -64,6 +55,21 @@ public class Product {
             return buyQuantity > normalStock + promotionStock;
         }
         return buyQuantity > normalStock;
+    }
+
+    public int getUnderPromotion(Integer buyQuantity) {
+        if (!promotion.isApply()) { // 프로모션 적용 안되면 X
+            return 0;
+        }
+        if (buyQuantity % (promotion.getCondition()) == 0) { // 조건과 딱 맞는 경우
+            return 0;
+        }
+        // (buy + get)으로 나누어떨어지지 않는 경우 -> 부족한 경우
+        int lackQuantity = promotion.getCondition() - (buyQuantity % promotion.getCondition());
+        if (buyQuantity + lackQuantity > promotionStock) { //재고 추가하면 프로모션 재고 초과하는 경우
+            return 0;
+        }
+        return lackQuantity;
     }
 
     private boolean isPromotionApply() {
@@ -92,5 +98,9 @@ public class Product {
 
     public boolean isPromotionStockExist() {
         return promotion != null;
+    }
+
+    public int getGetQuantity() {
+        return this.promotion.getGetQuantity();
     }
 }

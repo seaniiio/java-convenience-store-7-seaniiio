@@ -1,5 +1,9 @@
 package store.controller;
 
+import java.util.List;
+import store.constant.Command;
+import store.domain.Product;
+import store.dto.PromotionNotAppliedProduct;
 import store.service.OrderService;
 import store.service.StoreService;
 import store.util.InputProcessor;
@@ -32,8 +36,25 @@ public class StoreController {
         // 재고 충분한지 확인
         orderService.checkStock();
         // 프로모션 - 조건 부족한지 확인(추가할건지)
-
+        processLackCondition();
         // 프로모션 - 재고 부족한지 확인(그냥 구매할건지)
 //        orderService.buy();
+    }
+
+    private void processLackCondition() {
+        List<PromotionNotAppliedProduct> products = orderService.checkPromotion();
+        for (PromotionNotAppliedProduct product : products) {
+            InputProcessor.continueUntilNormalInput(this::processAddBuyQuantity, outputView::printErrorMessage, product);
+        }
+
+        orderService.addBuyQuantity(products);
+    }
+
+    private void processAddBuyQuantity(PromotionNotAppliedProduct product) {
+        String input = inputView.printAddBuyCommand(product);
+        Command command = Command.findCommand(input);
+        if (command.equals(Command.YES)) {
+            product.setPurchase();
+        }
     }
 }

@@ -50,6 +50,14 @@ public class Promotion {
         return (DateTimes.now().isAfter(startDate.atStartOfDay()) && DateTimes.now().isBefore(endDate.atStartOfDay()));
     }
 
+    public Integer getCondition() {
+        return get + buy;
+    }
+
+    public int getGetQuantity() {
+        return get;
+    }
+
 //    public static Promotion getNullPromotion() {
 //        return new Promotion("null", 0, 0, LocalDate.of(2024, 12, 12), LocalDate.of(2024, 12, 12));
 //    }
