@@ -29,5 +29,11 @@ public class StoreController {
     private void processOrder() {
         String orderInput = inputView.orderInput();
         orderService.setOrders(orderInput);
+        // 재고 충분한지 확인
+        orderService.checkStock();
+        // 프로모션 - 조건 부족한지 확인(추가할건지)
+
+        // 프로모션 - 재고 부족한지 확인(그냥 구매할건지)
+//        orderService.buy();
     }
 }

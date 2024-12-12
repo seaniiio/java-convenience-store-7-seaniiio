@@ -1,6 +1,5 @@
 package store.repository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import store.domain.Product;
@@ -20,5 +19,9 @@ public class OrderRepository {
 
     public void saveOrders(Map<Product, Integer> orders) {
         this.orders = orders;
+    }
+
+    public Map<Product, Integer> getOrders() {
+        return orders;
     }
 }

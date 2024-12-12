@@ -1,5 +1,6 @@
 package store.domain;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -42,6 +43,11 @@ public class Promotion {
 
     public String getName() {
         return this.name;
+    }
+
+    // 테스트 필요
+    public boolean isApply() {
+        return (DateTimes.now().isAfter(startDate.atStartOfDay()) && DateTimes.now().isBefore(endDate.atStartOfDay()));
     }
 
 //    public static Promotion getNullPromotion() {

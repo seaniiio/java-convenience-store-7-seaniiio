@@ -58,6 +58,18 @@ public class Product {
         this.promotionStock = quantity;
     }
 
+    public boolean isLackStock(int buyQuantity) {
+        if (isPromotionApply()) {
+            //프로모션 적용 -> 프로모션 재고까지 합해서 확인
+            return buyQuantity > normalStock + promotionStock;
+        }
+        return buyQuantity > normalStock;
+    }
+
+    private boolean isPromotionApply() {
+        return promotion != null && promotion.isApply();
+    }
+
     public String getName() {
         return name;
     }
