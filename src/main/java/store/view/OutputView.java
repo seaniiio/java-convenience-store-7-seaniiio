@@ -13,4 +13,8 @@ public class OutputView {
             System.out.println(productDto.getInformation());
         }
     }
+
+    public void printErrorMessage(String errorMessage) {
+        System.out.println(errorMessage);
+    }
 }
