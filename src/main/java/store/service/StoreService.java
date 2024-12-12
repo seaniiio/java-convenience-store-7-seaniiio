@@ -20,26 +20,22 @@ public class StoreService {
     }
 
     private void initPromotions() {
-        List<String> promotionsRaw = Reader.readPromotions();
         List<Promotion> promotions = new ArrayList<>();
-        for (String promotionRaw : promotionsRaw) {
+        for (String promotionRaw : Reader.readPromotions()) {
             promotions.add(Promotion.createPromotion(Parser.splitByComma(promotionRaw)));
         }
         storeRepository.savePromotions(promotions);
     }
 
     private void initProducts() {
-        List<String> productsRaw = Reader.readProducts();
-        for (String productRaw : productsRaw) {
+        for (String productRaw : Reader.readProducts()) {
             List<String> parsedProduct = Parser.splitByComma(productRaw);
             Promotion promotion = storeRepository.findPromotionByName(parsedProduct.get(PROMOTION_INDEX));
-            // 다른 재고가 존재하면 재고만 추가
             Product existProduct = storeRepository.findProductByName(parsedProduct.get(0));
             if (existProduct != null) {
                 existProduct.addStockToProduct(parsedProduct, promotion);
                 continue;
             }
-            // 존재하지 않는 상품이면 새로 만들기
             storeRepository.saveProduct(Product.createProduct(parsedProduct, promotion));
         }
     }

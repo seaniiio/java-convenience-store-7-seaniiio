@@ -22,16 +22,7 @@ public class OrderService {
     public void setOrders(String orderInput) {
         Map<String, Integer> ordersRaw = Parser.parseOrder(orderInput);
         Map<Product, Integer> orders = new HashMap<>();
-
-        for (String productName : ordersRaw.keySet()) {
-            Product product = storeRepository.findProductByName(productName);
-            if (product == null) {
-                throw new IllegalArgumentException(ErrorMessage.PRODUCT_NOT_EXIST_ERROR.getMessage());
-            }
-            int wantToBuyQuantity = ordersRaw.get(productName);
-            orders.put(product, wantToBuyQuantity);
-        }
-
+        saveOrders(ordersRaw, orders);
         orderRepository.saveOrders(orders);
     }
 
@@ -56,16 +47,10 @@ public class OrderService {
         return products;
     }
 
-    //리팩토링 필요...
     public void addBuyQuantity(List<LackBuyQuantityProduct> products) {
         for (LackBuyQuantityProduct addProduct : products) {
             if (addProduct.isAddPurchase()) {
-                Map<Product, Integer> orders = orderRepository.getOrders();
-                for (Product product : orders.keySet()) {
-                    if (product.isNameEqualsTo(addProduct.getName())) {
-                        orders.replace(product, orders.get(product) + addProduct.getLackQuantity());
-                    }
-                }
+                applyAddToProduct(addProduct);
             }
         }
     }
@@ -86,38 +71,110 @@ public class OrderService {
     public void setBuyConfirm(List<LackPromotionStockProduct> products) {
         for (LackPromotionStockProduct addProduct : products) {
             if (!addProduct.isConfirmed()) {
-                Map<Product, Integer> orders = orderRepository.getOrders();
-                for (Product product : orders.keySet()) {
-                    if (product.isNameEqualsTo(addProduct.getName())) {
-                        orders.replace(product, orders.get(product) - addProduct.getPromotionNotApplyQuantity());
-                    }
-                }
+                applyConfirmToProduct(addProduct);
             }
         }
     }
 
     public Receipt buy(Command isMembershipApply) {
-        Map<Product, Integer> orders = orderRepository.getOrders();
-        Map<String, List<Integer>> buyProducts = new HashMap<>();
-        Map<String, Integer> gifts = new HashMap<>();
+        Map<String, List<Integer>> buyProducts = getBuyProducts();
+        buyProducts();
+        Map<String, Integer> gifts = getGifts();
+        int totalAmount = getTotalAmount();
+        int promotionDiscount = getPromotionDiscount();
+        int promotionNotApplyAmount= getPromotionNotApplyAmount();
+        int membershipDiscount = calculateMembershipDiscount(isMembershipApply, promotionNotApplyAmount);
+        return new Receipt(buyProducts, gifts, totalAmount, promotionDiscount, membershipDiscount);
+    }
 
-        int totalAmount = 0;
-        int promotionDiscount = 0;
-        int membershipDiscount = 0;
-        int promotionNotApplyAmount= 0;
+    private int getPromotionNotApplyAmount() {
+        Map<Product, Integer> orders = orderRepository.getOrders();
+        int promotionNotApplyAmount = 0;
         for (Product product : orders.keySet()) {
-            buyProducts.put(product.getName(), List.of(orders.get(product), product.getBuyPrice(orders.get(product))));
-            product.buy(orders.get(product));
-            gifts.put(product.getName(), product.getGifts(orders.get(product)));
-            totalAmount += product.getBuyPrice(orders.get(product));
-            promotionDiscount += product.getBuyPrice(product.getGifts(orders.get(product)));
             promotionNotApplyAmount += product.getMembershipApplyAmount(orders.get(product));
         }
+        return promotionNotApplyAmount;
+    }
 
-        if (isMembershipApply.equals(Command.YES)) {
-            membershipDiscount = Integer.min(8000, (int) (promotionNotApplyAmount * 0.3));
+    private int getPromotionDiscount() {
+        Map<Product, Integer> orders = orderRepository.getOrders();
+        int promotionDiscount = 0;
+        for (Product product : orders.keySet()) {
+            promotionDiscount += product.getBuyPrice(product.getGifts(orders.get(product)));
         }
+        return promotionDiscount;
+    }
 
-        return new Receipt(buyProducts, gifts, totalAmount, promotionDiscount, membershipDiscount);
+    private int getTotalAmount() {
+        Map<Product, Integer> orders = orderRepository.getOrders();
+        int totalAmount = 0;
+        for (Product product : orders.keySet()) {
+            totalAmount += product.getBuyPrice(orders.get(product));
+        }
+        return totalAmount;
+    }
+
+    private void buyProducts() {
+        Map<Product, Integer> orders = orderRepository.getOrders();
+        for (Product product : orders.keySet()) {
+            product.buy(orders.get(product));
+        }
+    }
+
+    private Map<String, Integer> getGifts() {
+        Map<Product, Integer> orders = orderRepository.getOrders();
+        Map<String, Integer> gifts = new HashMap<>();
+        for (Product product : orders.keySet()) {
+            gifts.put(product.getName(), product.getGifts(orders.get(product)));
+        }
+        return gifts;
+
+    }
+
+    private Map<String, List<Integer>> getBuyProducts() {
+        Map<Product, Integer> orders = orderRepository.getOrders();
+        Map<String, List<Integer>> buyProducts = new HashMap<>();
+        for (Product product : orders.keySet()) {
+            buyProducts.put(product.getName(), List.of(orders.get(product), product.getBuyPrice(orders.get(product))));
+        }
+        return buyProducts;
+    }
+
+
+
+    private void saveOrders(Map<String, Integer> ordersRaw, Map<Product, Integer> orders) {
+        for (String productName : ordersRaw.keySet()) {
+            Product product = storeRepository.findProductByName(productName);
+            if (product == null) {
+                throw new IllegalArgumentException(ErrorMessage.PRODUCT_NOT_EXIST_ERROR.getMessage());
+            }
+            int wantToBuyQuantity = ordersRaw.get(productName);
+            orders.put(product, wantToBuyQuantity);
+        }
+    }
+
+    private void applyAddToProduct(LackBuyQuantityProduct addProduct) {
+        Map<Product, Integer> orders = orderRepository.getOrders();
+        for (Product product : orders.keySet()) {
+            if (product.isNameEqualsTo(addProduct.getName())) {
+                orders.replace(product, orders.get(product) + addProduct.getLackQuantity());
+            }
+        }
+    }
+
+    private void applyConfirmToProduct(LackPromotionStockProduct addProduct) {
+        Map<Product, Integer> orders = orderRepository.getOrders();
+        for (Product product : orders.keySet()) {
+            if (product.isNameEqualsTo(addProduct.getName())) {
+                orders.replace(product, orders.get(product) - addProduct.getPromotionNotApplyQuantity());
+            }
+        }
+    }
+
+    private int calculateMembershipDiscount(Command isMembershipApply, int promotionNotApplyAmount) {
+        if (isMembershipApply.equals(Command.YES)) {
+            return Integer.min(8000, (int) (promotionNotApplyAmount * 0.3));
+        }
+        return 0;
     }
 }
