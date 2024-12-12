@@ -27,7 +27,10 @@ public class Product {
         String name = productRaw.get(NAME_INDEX);
         int price = Integer.parseInt(productRaw.get(PRICE_INDEX));
         int quantity = Integer.parseInt(productRaw.get(QUANTITY_INDEX));
-        return new Product(name, price, promotion, quantity, 0);
+        if (promotion == null) {
+            return new Product(name, price, promotion, quantity, 0);
+        }
+        return new Product(name, price, promotion, 0, quantity);
     }
 
 //    public static Product getNullProduct() {
@@ -53,5 +56,29 @@ public class Product {
         // 프로모션 재고 추가
         this.promotion = promotion;
         this.promotionStock = quantity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public Promotion getPromotion() {
+        return promotion;
+    }
+
+    public int getNormalStock() {
+        return normalStock;
+    }
+
+    public int getPromotionStock() {
+        return promotionStock;
+    }
+
+    public boolean isPromotionStockExist() {
+        return promotion != null;
     }
 }

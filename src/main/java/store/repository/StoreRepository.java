@@ -41,4 +41,12 @@ public class StoreRepository {
         }
         return null;
     }
+
+    public List<Product> getProducts() {
+        return new ArrayList<>(products);
+    }
+
+    public void saveProduct(Product product) {
+        this.products.add(product);
+    }
 }

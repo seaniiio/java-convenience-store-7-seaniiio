@@ -17,5 +17,6 @@ public class StoreController {
 
     public void run() {
         storeService.initStore();
+        outputView.printWelcomeMessage(storeService.getProducts());
     }
 }

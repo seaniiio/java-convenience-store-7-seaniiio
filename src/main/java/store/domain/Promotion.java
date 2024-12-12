@@ -40,6 +40,10 @@ public class Promotion {
         return this.name.equals(name);
     }
 
+    public String getName() {
+        return this.name;
+    }
+
 //    public static Promotion getNullPromotion() {
 //        return new Promotion("null", 0, 0, LocalDate.of(2024, 12, 12), LocalDate.of(2024, 12, 12));
 //    }
