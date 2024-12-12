@@ -104,7 +104,7 @@ public class Product {
     }
 
     public Integer getGifts(Integer buyQuantity) {
-        if (promotion == null) {
+        if (promotion == null || !promotion.isApply()) {
             return 0;
         }
         int applyQuantity = (promotionStock / (promotion.getCondition())) * promotion.getCondition();
@@ -115,7 +115,7 @@ public class Product {
     }
 
     public void buy(int quantity) {
-        if (promotion.isApply()) {
+        if (promotion != null && promotion.isApply()) {
             if (promotionStock >= quantity) {
                 promotionStock -= quantity;
                 return;

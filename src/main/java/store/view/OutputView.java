@@ -40,6 +40,6 @@ public class OutputView {
         System.out.println(String.format("총구매액         %d    %,d",receipt.getTotalQuantity(), receipt.getTotalAmount()));
         System.out.println(String.format("행사할인               -%,d", receipt.getPromotionDiscount()));
         System.out.println(String.format("멤버십할인              -%,d", receipt.getMembershipDiscount()));
-        System.out.println(String.format("내실돈                 -%,d", receipt.getPayAmount()));
+        System.out.println(String.format("내실돈                 %,d", receipt.getPayAmount()));
     }
 }

@@ -25,22 +25,27 @@ public class StoreController {
 
     public void run() {
         storeService.initStore();
+        do {
+            processStore();
+        } while (InputProcessor.continueUntilNormalInput(this::processContinue, outputView::printErrorMessage));
+    }
+
+    private void processStore() {
         outputView.printWelcomeMessage(storeService.getProducts());
-
-        InputProcessor.continueUntilNormalInput(this::processOrder, outputView::printErrorMessage);
-
+        processOrder();
+        InputProcessor.continueUntilNormalInput(this::processBuy, outputView::printErrorMessage);
     }
 
     private void processOrder() {
+        InputProcessor.continueUntilNormalInput(this::processOrderInput, outputView::printErrorMessage);
+        InputProcessor.continueUntilNormalInput(this::processLackCondition, outputView::printErrorMessage);
+        InputProcessor.continueUntilNormalInput(this::processLackPromotionStock, outputView::printErrorMessage);
+    }
+
+    private void processOrderInput() {
         String orderInput = inputView.orderInput();
         orderService.setOrders(orderInput);
-        // 재고 충분한지 확인
         orderService.checkStock();
-        // 프로모션 - 조건 부족한지 확인(추가할건지)
-        processLackCondition();
-        // 프로모션 - 재고 부족한지 확인(그냥 구매할건지)
-        processLackPromotionStock();
-        InputProcessor.continueUntilNormalInput(this::processBuy, outputView::printErrorMessage);
     }
 
     private void processLackCondition() {
@@ -81,5 +86,11 @@ public class StoreController {
         if (command.equals(Command.YES)) {
             product.confirmToBuy();
         }
+    }
+
+    private boolean processContinue() {
+        String input = inputView.continueInput();
+        Command command = Command.findCommand(input);
+        return command.equals(Command.YES);
     }
 }
