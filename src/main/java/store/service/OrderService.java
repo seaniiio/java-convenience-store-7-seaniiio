@@ -115,7 +115,7 @@ public class OrderService {
         }
 
         if (isMembershipApply.equals(Command.YES)) {
-            membershipDiscount = (int) (promotionNotApplyAmount * 0.3);
+            membershipDiscount = Integer.min(8000, (int) (promotionNotApplyAmount * 0.3));
         }
 
         return new Receipt(buyProducts, gifts, totalAmount, promotionDiscount, membershipDiscount);
